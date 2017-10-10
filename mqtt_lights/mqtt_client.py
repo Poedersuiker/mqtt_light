@@ -37,11 +37,13 @@ class mqtt_client(threading.Thread):
     def run(self):
         self.mqtt_client.loop_forever()
 
+
 def on_connect(client, userdata, flags, rc):
     print('Connected with result code: '.format(rc))
 
-def on_message(cleint, userdata, msg):
+def on_message(client, userdata, msg):
     print('{0} : {1}'.format(msg.topic, msg.payload))
+
 
 if __name__ == '__main__':
     mqtt_c = mqtt_client('test')
