@@ -22,6 +22,7 @@ class mqtt_client(threading.Thread):
         self.mqtt_client.connect(self.host, self.port, 60)
         self.mqtt_client.subscribe(self.config_topic)
         self.mqtt_client.subscribe(self.state_topic)
+        self.mqtt_client.subscribe(self.set_topic)
 
         self.send_config(cap_json)
         self.send_status(status_json)
