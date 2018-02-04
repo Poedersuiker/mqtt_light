@@ -4,7 +4,7 @@ import pyudmx
 import mqtt_client
 
 
-class light:
+class Light:
     def __init__(self, name, floor, dmx_channel, on_change):
         self.name = name
         self.floor = floor
@@ -58,7 +58,7 @@ class light:
         self.mqtt.send_config(self.json_config())
 
 
-class mqtt_lights:
+class MqttLights:
     def __init__(self):
         self.udmx = pyudmx.uDMXDevice()
         self.udmx.open()
@@ -77,4 +77,4 @@ class mqtt_lights:
 
 
 if __name__ == '__main__':
-    mqtt_lights = mqtt_lights()
+    mqtt_lights = MqttLights()
