@@ -24,6 +24,7 @@ class Lights:
 
 class Light(threading.Thread):
     def __init__(self, dmx_channel, on_change):
+        threading.Thread.__init__(self)
         self.running = False
         self.dmx_channel = dmx_channel
         self.brightness = 0
