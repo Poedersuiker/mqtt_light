@@ -46,7 +46,7 @@ class Light(threading.Thread):
 
         if self.brightness == self.target:
             self.wait = random.randint(0, 5)
-            self.brightness = random.randint(0, 255)
+            self.target = random.randint(0, 255)
             self.step_speed = random.randint(0, 100) / 1000.0
         elif self.brightness < self.target:
             self.brightness += 1
