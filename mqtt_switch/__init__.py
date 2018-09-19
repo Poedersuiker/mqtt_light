@@ -19,11 +19,13 @@ class mqtt_switch:
         self.state = False
 
         GPIO.setmode(GPIO.BOARD)
-        GPIO.add_event_detect(io_port, GPIO.BOTH, self.toggle_self())
+        GPIO.setup(self.io_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.add_event_detect(io_port, GPIO.BOTH, self.toggle_self)
 
         self.mqtt_client = mqtt_client(self.name, mqtt_host, mqtt_port)
 
-    def toggle_self(self):
+    def toggle_self(self, msg=""):
+        print(msg)
         if self.state:
             self.switch_off()
         else:
@@ -41,3 +43,8 @@ class mqtt_switch:
             self.switch_off()
         elif msg.topic == 'ON':
             self.switch_on()
+
+
+if __name__ == '__main__':
+    switch1 = mqtt_switch("test1", 16)
+    switch2 = mqtt_switch("test2", 18)
