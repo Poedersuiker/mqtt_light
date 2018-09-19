@@ -20,7 +20,7 @@ class mqtt_switch:
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.io_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(io_port, GPIO.BOTH, self.toggle_self, bouncetime=2000)
+        GPIO.add_event_detect(io_port, GPIO.BOTH, self.toggle_self, bouncetime=50)
 
         self.mqtt_client = mqtt_client(self.name, mqtt_host, mqtt_port)
 
