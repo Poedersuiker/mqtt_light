@@ -4,9 +4,11 @@ from pprint import PrettyPrinter
 
 pp = PrettyPrinter(indent=4)
 
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code: {0}".format(rc))
     client.subscribe("hassio/#")
+
 
 def on_message(client, userdata, msg):
     print(msg.topic)
@@ -15,6 +17,7 @@ def on_message(client, userdata, msg):
         pp.pprint(json.loads(jsonstr))
     except:
         pp.pprint(jsonstr)
+
 
 client = mqtt.Client()
 client.on_connect = on_connect
