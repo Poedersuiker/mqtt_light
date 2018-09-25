@@ -17,15 +17,23 @@ class mqtt_switch:
         self.name = name
         self.io_port = io_port
         self.state = False
+        self.switch_state = False
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.io_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(io_port, GPIO.BOTH, self.toggle_self, bouncetime=50)
+        GPIO.add_event_detect(io_port, GPIO.BOTH, self.read_switch, bouncetime=50)
 
         self.mqtt_client = mqtt_client(self.name, mqtt_host, mqtt_port)
 
+    def read_switch(self, msg=""):
+        if self.switch_state == GPIO.input(self.io_port):
+            pass
+        else:
+            self.switch_state = GPIO.input(self.io_port)
+            self.toggle_self(msg)
+
     def toggle_self(self, msg=""):
-        print(msg)
+        print("Diff switch: {0}".format(msg))
         if self.state:
             self.switch_off()
         else:
