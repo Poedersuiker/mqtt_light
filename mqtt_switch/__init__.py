@@ -26,10 +26,12 @@ class mqtt_switch:
         self.mqtt_client = mqtt_client(self.name, mqtt_host, mqtt_port)
 
     def read_switch(self, msg=""):
-        if self.switch_state == GPIO.input(self.io_port):
+        switch = GPIO.input(self.io_port)
+        print("Read switch: {0} {1}".format(self.switch_state, switch))
+        if self.switch_state == switch:
             pass
         else:
-            self.switch_state = GPIO.input(self.io_port)
+            self.switch_state = switch
             self.toggle_self(msg)
 
     def toggle_self(self, msg=""):
