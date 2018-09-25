@@ -17,7 +17,7 @@ class mqtt_switch:
         self.name = name
         self.io_port = io_port
         self.state = False
-        self.switch_state = False
+        self.switch_state = 0
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.io_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -27,7 +27,7 @@ class mqtt_switch:
 
     def read_switch(self, msg=""):
         switch = GPIO.input(self.io_port)
-        print("Read switch: {0} {1}".format(self.switch_state, switch))
+        print("Read switch {0}: {1} {2}".format(msg, self.switch_state, switch))
         if self.switch_state == switch:
             pass
         else:
