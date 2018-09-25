@@ -1,5 +1,5 @@
 # Python imports
-
+from time import sleep
 # 3rd party imports
 import RPi.GPIO as GPIO
 # module imports
@@ -26,6 +26,7 @@ class mqtt_switch:
         self.mqtt_client = mqtt_client(self.name, mqtt_host, mqtt_port)
 
     def read_switch(self, msg=""):
+        sleep(0.1)
         switch = GPIO.input(self.io_port)
         print("Read switch {0}: {1} {2}".format(msg, self.switch_state, switch))
         if self.switch_state == switch:
