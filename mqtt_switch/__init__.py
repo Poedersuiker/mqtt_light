@@ -7,11 +7,11 @@ from mqtt_client import mqtt_client
 
 
 class mqtt_switch:
-    '''
+    """
     Link between the hardware button and HASS.IO
 
     GPIO.add_event_detect(io_port, GPIO.BOTH, toggle_self)
-    '''
+    """
 
     def __init__(self, name, io_port, mqtt_host='localhost', mqtt_port=1883):
         self.name = name
