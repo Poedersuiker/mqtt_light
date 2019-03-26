@@ -23,11 +23,12 @@ class MQTTLight:
     - sensor pin for on/off state
 
     """
+    RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
 
     def __init__(self, name, relay, sensor_pin, mqtt_host='localhost', mqtt_port=1883):
         self.name = name
-        self.relay = relay
         self.sensor_pin = sensor_pin
+        self.set_relay(relay)
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.relay, GPIO.OUT)
@@ -54,3 +55,7 @@ class MQTTLight:
     def send_state(self):
         json = "{state: {0}}".format(self.read_state())
         self.mqtt_client.send_status(json)
+
+    def set_relay(self, relay_nr):
+        if 1 <= relay_nr <= 8:
+            self.relay = self.RELAY[relay_nr]
