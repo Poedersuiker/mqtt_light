@@ -27,6 +27,7 @@ class MQTTLight:
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
 
     def __init__(self, floor, name, relay, sensor_pin, mqtt_host='localhost', mqtt_port=1883):
+        self.floor = floor
         self.name = name
         self.sensor_pin = sensor_pin
         self.set_relay(relay)
