@@ -83,8 +83,7 @@ class MQTTLight:
         return GPIO.input(self.sensor_pin)
 
     def send_state(self):
-        json = '{state: {0}}'.format(self.read_state())
-        self.mqtt_client.send_status(json)
+        self.mqtt_client.send_status(self.json_state())
 
     def set_relay(self, relay_nr):
         if 1 <= relay_nr <= 8:
