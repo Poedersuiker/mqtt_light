@@ -4,7 +4,7 @@ import threading
 
 class MQTTClient(threading.Thread):
     def __init__(self, name, host="localhost", port=1883):
-        threading.Thread.__init__(self, target=self.run_forever)
+        threading.Thread.__init__(self, target=self.run)
         self.mqtt_client = mqtt.Client()
         self.host = host
         self.port = port
