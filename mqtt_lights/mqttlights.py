@@ -1,7 +1,7 @@
 import threading
 import json
 import pyudmx
-import mqtt_client
+import MQTTClient
 
 
 class Light:
@@ -36,7 +36,7 @@ class Light:
         self.status["transition"] = 2
         self.status["white_value"] = 150
 
-        self.mqtt = mqtt_client.mqtt_client(name)
+        self.mqtt = MQTTClient.MQTTClient(name)
 
     def json_config(self):
         return json.dumps(self.capabilities)

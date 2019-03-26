@@ -2,11 +2,12 @@ import paho.mqtt.client as mqtt
 import threading
 
 
-class mqtt_client(threading.Thread):
+class MQTTClient(threading.Thread):
     def __init__(self, name, host="localhost", port=1883):
         self.mqtt_client = mqtt.Client()
         self.host = host
         self.port = port
+        self.name = name
 
     def set_on_connect(self, on_connect):
         self.mqtt_client.on_connect = on_connect
@@ -47,7 +48,7 @@ def on_message(client, userdata, msg):
 
 
 if __name__ == '__main__':
-    mqtt_c = mqtt_client('test')
+    mqtt_c = MQTTClient('test')
     mqtt_c.set_on_connect(on_connect)
     mqtt_c.set_on_message(on_message)
     mqtt_c.connect('hassio/test/config', 'hassio/test/state', 'hassio/test/set', '{1}', '{2}')

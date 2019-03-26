@@ -3,7 +3,7 @@ from time import sleep
 # 3rd party imports
 import RPi.GPIO as GPIO
 # module imports
-from mqtt_client import mqtt_client
+from MQTTClient import MQTTClient
 
 
 class mqtt_switch:
@@ -23,7 +23,7 @@ class mqtt_switch:
         GPIO.setup(self.io_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(io_port, GPIO.BOTH, self.read_switch, bouncetime=50)
 
-        self.mqtt_client = mqtt_client(self.name, mqtt_host, mqtt_port)
+        self.mqtt_client = MQTTClient(self.name, mqtt_host, mqtt_port)
 
     def read_switch(self, msg=""):
         sleep(0.1)
