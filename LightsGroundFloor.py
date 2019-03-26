@@ -5,7 +5,7 @@ from time import sleep
 # module imports
 from MQTTLight import MQTTLight
 
-kitchen_light = MQTTLight("Kitchen", 1, 7)
+kitchen_light = MQTTLight("GroundFloor", "Kitchen", 1, 7)
 
 i = 0
 while i < 10:
