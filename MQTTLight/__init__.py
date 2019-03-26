@@ -67,6 +67,7 @@ class MQTTLight:
 
     def switch_light(self):
         GPIO.output(self.relay, not GPIO.input(self.relay))
+        self.send_state()
 
     def light_off(self):
         # read state and change if light on
