@@ -40,7 +40,7 @@ class MQTTBoard:
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
 
     def __init__(self, name, mqtt_host='localhost'):
-        self.mqtt_client = MQTTClient(name, mqtt_host)
+        self.mqtt_client = MQTTClient(name, mqtt_host, 1883)
         self.mqtt_client.connect()
         self.base_topic = "homie"
         self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
@@ -57,7 +57,7 @@ class MQTTBoard:
 
         self.mqtt_publish_device()
         self.send_stats()
-        
+
         Timer(self.stats_interval, self.send_stats).start()
 
     def mqtt_publish_device(self):
