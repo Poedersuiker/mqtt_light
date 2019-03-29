@@ -56,9 +56,9 @@ class MQTTBoard:
         self.stats_interval = 60
 
         self.mqtt_publish_device()
-        self.send_stats()
+        self.mqtt_send_stats()
 
-        Timer(self.stats_interval, self.send_stats).start()
+        Timer(self.stats_interval, self.mqtt_send_stats).start()
 
     def mqtt_publish_device(self):
         topic = "{0}/{1}/".format(self.base_topic, self.device_id)
