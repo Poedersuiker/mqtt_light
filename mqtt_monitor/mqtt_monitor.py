@@ -7,7 +7,7 @@ pp = PrettyPrinter(indent=4)
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code: {0}".format(rc))
-    client.subscribe("hassio/#")
+    client.subscribe("#")
 
 
 def on_message(client, userdata, msg):
