@@ -5,5 +5,5 @@ from time import sleep
 # module imports
 from MQTTBoard import MQTTBoard
 
-board = MQTTBoard('TESTv0.1', '192.168.0.1')
+board = MQTTBoard('TESTv0.1', '192.168.0.10')
 
