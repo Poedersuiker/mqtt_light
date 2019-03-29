@@ -56,7 +56,7 @@ class MQTTBoard:
         self.stats_interval = 60
 
         self.mqtt_publish_device()
-        
+
         Timer(self.stats_interval, self.send_stats).start()
 
     def mqtt_publish_device(self):
@@ -74,13 +74,14 @@ class MQTTBoard:
         self.mqtt_client.publish(topic + "$state", "ready")
 
     def mqtt_send_stats(self):
-        stats_topic =
+        stats_topic = ""
         uptime = subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0]
         signal = "Not implemented yet"
         cputemp = subprocess.check_output(['cat', '/sys/class/thermal/thermal_zone0/temp']) / 1000
         cpuload = subprocess.check_output(['cat', '/proc/loadavg'])
         freeheap = subprocess.check_output(['cat', '/proc/meminfo']).decode('utf-8').split('\n')[1].replace(' ', '').split(':')[1][:-2]
         supply = "Not implemented yet"
+
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -93,3 +94,6 @@ def get_ip():
     finally:
         s.close()
     return IP
+
+if __name__ == '__main__':
+    board = MQTTBoard('TEST v0.1')
