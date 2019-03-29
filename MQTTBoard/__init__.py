@@ -82,7 +82,7 @@ class MQTTBoard:
         signal = "Not implemented yet"
         self.mqtt_client.publish(stats_topic + "signal", 0)
 
-        cputemp = subprocess.check_output(['cat', '/sys/class/thermal/thermal_zone0/temp']) / 1000
+        cputemp = int(subprocess.check_output(['cat', '/sys/class/thermal/thermal_zone0/temp'])) / 1000
         self.mqtt_client.publish(stats_topic + "cputemp", cputemp)
 
         cpuload = subprocess.check_output(['cat', '/proc/loadavg'])
