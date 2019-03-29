@@ -16,26 +16,15 @@ class MQTTClient(threading.Thread):
     def set_on_message(self, on_message):
         self.mqtt_client.on_message = on_message
 
-    def connect(self, config_topic, state_topic, set_topic, cap_json, status_json):
-        self.config_topic = config_topic
-        self.state_topic = state_topic
-        self.set_topic = set_topic
-
+    def connect(self):
         self.mqtt_client.connect(self.host, self.port, 60)
-        self.mqtt_client.subscribe(self.config_topic)
-        self.mqtt_client.subscribe(self.state_topic)
-        self.mqtt_client.subscribe(self.set_topic)
 
-        self.send_config(cap_json)
-        self.send_status(status_json)
-        self.send_config(cap_json)
-        self.send_status(status_json)
+    def subscribe(self, topic):
+        self.mqtt_client.subscribe(topic)
 
-    def send_config(self, json):
-        self.mqtt_client.publish(self.config_topic, json)
+    def publish(self, topic, msg):
+        self.mqtt_client.publish(topic, msg)
 
-    def send_status(self, json):
-        self.mqtt_client.publish(self.state_topic, json)
 
     def run(self):
         self.mqtt_client.loop_forever()
@@ -52,5 +41,5 @@ if __name__ == '__main__':
     mqtt_c = MQTTClient('test')
     mqtt_c.set_on_connect(on_connect)
     mqtt_c.set_on_message(on_message)
-    mqtt_c.connect('hassio/test/config', 'hassio/test/state', 'hassio/test/set', '{1}', '{2}')
+    mqtt_c.connect()
     mqtt_c.start()
