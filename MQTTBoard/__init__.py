@@ -55,27 +55,30 @@ class MQTTBoard:
         self.stats = "uptime,signal,cputemp,cpuload,freeheap,supply"
         self.stats_interval = 60
 
+        self.topic = "{0}/{1}/".format(self.base_topic, self.device_id)
+
         self.mqtt_publish_device()
         self.mqtt_send_stats()
 
         Timer(self.stats_interval, self.mqtt_send_stats).start()
 
+
     def mqtt_publish_device(self):
-        topic = "{0}/{1}/".format(self.base_topic, self.device_id)
-        self.mqtt_client.publish(topic + "$homie", self.homie)
-        self.mqtt_client.publish(topic + "$name", self.name)
-        self.mqtt_client.publish(topic + "$localip", self.localip)
-        self.mqtt_client.publish(topic + "$mac", self.mac)
-        self.mqtt_client.publish(topic + "$fw/name", self.fw_name)
-        self.mqtt_client.publish(topic + "$fw/version", self.fw_version)
-        self.mqtt_client.publish(topic + "$nodes", self.nodes)
-        self.mqtt_client.publish(topic + "$implementation", self.implementation)
-        self.mqtt_client.publish(topic + "$stats", self.stats)
-        self.mqtt_client.publish(topic + "$stats/interval", self.stats_interval)
-        self.mqtt_client.publish(topic + "$state", "ready")
+        self.mqtt_client.publish(self.topic + "$homie", self.homie)
+        self.mqtt_client.publish(self.topic + "$name", self.name)
+        self.mqtt_client.publish(self.topic + "$localip", self.localip)
+        self.mqtt_client.publish(self.topic + "$mac", self.mac)
+        self.mqtt_client.publish(self.topic + "$fw/name", self.fw_name)
+        self.mqtt_client.publish(self.topic + "$fw/version", self.fw_version)
+        self.mqtt_client.publish(self.topic + "$nodes", self.nodes)
+        self.mqtt_client.publish(self.topic + "$implementation", self.implementation)
+        self.mqtt_client.publish(self.topic + "$stats", self.stats)
+        self.mqtt_client.publish(self.topic + "$stats/interval", self.stats_interval)
+        self.mqtt_client.publish(self.topic + "$state", "ready")
 
     def mqtt_send_stats(self):
-        stats_topic = "{0}/{1}/$stats/".format(self.base_topic, self.device_id)
+        stats_topic = "{0}/$stats/".format(self.topic)
+
         uptime = subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0]
         self.mqtt_client.publish(stats_topic + "uptime", uptime)
 
@@ -93,6 +96,26 @@ class MQTTBoard:
 
         supply = "Not implemented yet"
         self.mqtt_client.publish(stats_topic + "supply", 0)
+
+    def mqtt_send_nodes(self):
+        lights_topic = "{0}/lights/".format(self.topic)
+        self.mqtt_client.publish(lights_topic + "$name", "Lights")
+        self.mqtt_client.publish(lights_topic + "$properties", "power")
+        self.mqtt_client.publish(lights_topic + "$array", "1-8")
+
+        self.mqtt_client.publish(lights_topic + "power/$name", "Power")
+        self.mqtt_client.publish(lights_topic + "power/$settable", "true")
+        self.mqtt_client.publish(lights_topic + "power/$datatype ", "boolean")
+
+        i = 1
+        while i <= 8:
+            self.mqtt_send_node(i)
+            i += 1
+
+    def mqtt_send_node(self, nr):
+        light_topic = "{0}/lights_{1}/".format(self.topic, nr)
+        self.mqtt_client.publish(light_topic + "$name", "Light {0}".format(nr))
+        self.mqtt_client.publish(light_topic + "power", "false")
 
 
 def get_ip():
