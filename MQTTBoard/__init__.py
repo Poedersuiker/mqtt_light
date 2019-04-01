@@ -50,7 +50,7 @@ class MQTTBoard:
         # self.mac = get_mac()
         self.fw_name = "Raspi Relayboard"
         self.fw_version = "0.1"
-        self.nodes = "lights[]"
+        self.nodes = "light_1,light_2,light_3,light_4,light_5,light_6,light_7,light_8"
         self.implementation = "RaspberryPi"
         self.stats = "uptime,signal,cputemp,cpuload,freeheap,supply"
         self.stats_interval = 60
