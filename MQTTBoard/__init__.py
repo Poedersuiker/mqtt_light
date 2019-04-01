@@ -46,8 +46,8 @@ class MQTTBoard:
         self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
         self.homie = "3.0.1"
         self.name = name
-        self.localip = get_ip()
-        self.mac = get_mac()
+        # self.localip = get_ip()
+        # self.mac = get_mac()
         self.fw_name = "Raspi Relayboard"
         self.fw_version = "0.1"
         self.nodes = "lights[]"
@@ -67,8 +67,8 @@ class MQTTBoard:
     def mqtt_publish_device(self):
         self.mqtt_client.publish(self.topic + "/$homie", self.homie)
         self.mqtt_client.publish(self.topic + "/$name", self.name)
-        self.mqtt_client.publish(self.topic + "/$localip", self.localip)
-        self.mqtt_client.publish(self.topic + "/$mac", self.mac)
+        # self.mqtt_client.publish(self.topic + "/$localip", self.localip)
+        # self.mqtt_client.publish(self.topic + "/$mac", self.mac)
         self.mqtt_client.publish(self.topic + "/$fw/name", self.fw_name)
         self.mqtt_client.publish(self.topic + "/$fw/version", self.fw_version)
         self.mqtt_client.publish(self.topic + "/$nodes", self.nodes)
@@ -99,23 +99,19 @@ class MQTTBoard:
         self.mqtt_client.publish(stats_topic + "supply", 0)
 
     def mqtt_send_nodes(self):
-        lights_topic = "{0}/lights/".format(self.topic)
-        self.mqtt_client.publish(lights_topic + "$name", "Lights")
-        self.mqtt_client.publish(lights_topic + "$properties", "power")
-        self.mqtt_client.publish(lights_topic + "$array", "1-8")
-
-        self.mqtt_client.publish(lights_topic + "power/$name", "Power")
-        self.mqtt_client.publish(lights_topic + "power/$settable", "true")
-        self.mqtt_client.publish(lights_topic + "power/$datatype ", "boolean")
-
         i = 1
         while i <= 8:
             self.mqtt_send_node(i)
             i += 1
 
     def mqtt_send_node(self, nr):
-        light_topic = "{0}/lights_{1}/".format(self.topic, nr)
+        light_topic = "{0}/light_{1}/".format(self.topic, nr)
         self.mqtt_client.publish(light_topic + "$name", "Light {0}".format(nr))
+        self.mqtt_client.publish(light_topic + "$properties", "power")
+
+        self.mqtt_client.publish(light_topic + "power/$name", "Power")
+        self.mqtt_client.publish(light_topic + "power/$settable", "true")
+        self.mqtt_client.publish(light_topic + "power/$datatype ", "boolean")
         self.mqtt_client.publish(light_topic + "power", "false")
 
 
