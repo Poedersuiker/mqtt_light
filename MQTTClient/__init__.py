@@ -23,7 +23,7 @@ class MQTTClient(threading.Thread):
         self.mqtt_client.subscribe(topic)
 
     def publish(self, topic, msg):
-        self.mqtt_client.publish(topic, msg)
+        self.mqtt_client.publish(topic, msg, retain=True)
 
 
     def run(self):
