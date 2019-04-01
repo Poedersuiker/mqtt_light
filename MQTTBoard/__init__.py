@@ -55,26 +55,27 @@ class MQTTBoard:
         self.stats = "uptime,signal,cputemp,cpuload,freeheap,supply"
         self.stats_interval = 60
 
-        self.topic = "{0}/{1}/".format(self.base_topic, self.device_id)
+        self.topic = "{0}/{1}".format(self.base_topic, self.device_id)
 
         self.mqtt_publish_device()
         self.mqtt_send_stats()
+        self.mqtt_send_nodes()
 
         Timer(self.stats_interval, self.mqtt_send_stats).start()
 
 
     def mqtt_publish_device(self):
-        self.mqtt_client.publish(self.topic + "$homie", self.homie)
-        self.mqtt_client.publish(self.topic + "$name", self.name)
-        self.mqtt_client.publish(self.topic + "$localip", self.localip)
-        self.mqtt_client.publish(self.topic + "$mac", self.mac)
-        self.mqtt_client.publish(self.topic + "$fw/name", self.fw_name)
-        self.mqtt_client.publish(self.topic + "$fw/version", self.fw_version)
-        self.mqtt_client.publish(self.topic + "$nodes", self.nodes)
-        self.mqtt_client.publish(self.topic + "$implementation", self.implementation)
-        self.mqtt_client.publish(self.topic + "$stats", self.stats)
-        self.mqtt_client.publish(self.topic + "$stats/interval", self.stats_interval)
-        self.mqtt_client.publish(self.topic + "$state", "ready")
+        self.mqtt_client.publish(self.topic + "/$homie", self.homie)
+        self.mqtt_client.publish(self.topic + "/$name", self.name)
+        self.mqtt_client.publish(self.topic + "/$localip", self.localip)
+        self.mqtt_client.publish(self.topic + "/$mac", self.mac)
+        self.mqtt_client.publish(self.topic + "/$fw/name", self.fw_name)
+        self.mqtt_client.publish(self.topic + "/$fw/version", self.fw_version)
+        self.mqtt_client.publish(self.topic + "/$nodes", self.nodes)
+        self.mqtt_client.publish(self.topic + "/$implementation", self.implementation)
+        self.mqtt_client.publish(self.topic + "/$stats", self.stats)
+        self.mqtt_client.publish(self.topic + "/$stats/interval", self.stats_interval)
+        self.mqtt_client.publish(self.topic + "/$state", "ready")
 
     def mqtt_send_stats(self):
         stats_topic = "{0}/$stats/".format(self.topic)
