@@ -41,7 +41,13 @@ class MQTTBoard:
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
         self.mqtt_client = MQTTClient(name, mqtt_host, mqtt_port)
+
+        self.mqtt_client.set_on_connect(self.mqtt_on_connect)
+        self.mqtt_client.set_on_message(self.mqtt_on_message)
+
         self.mqtt_client.connect()
+        self.mqtt_client.start()
+
         self.base_topic = "homie"
         self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
         self.homie = "3.0.1"
@@ -113,6 +119,12 @@ class MQTTBoard:
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype ", "boolean")
         self.mqtt_client.publish(light_topic + "power", "false")
+
+    def mqtt_on_connect(self, client, userdata, flags, rc):
+        print('Connected with result code: '.format(rc))
+
+    def mqtt_on_message(self, client, userdata, msg):
+        print('{0} : {1}'.format(msg.topic, msg.payload))
 
 
 def get_ip():
