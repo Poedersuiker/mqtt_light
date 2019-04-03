@@ -5,6 +5,7 @@ import json
 import socket
 from uuid import getnode as get_mac
 import subprocess
+import logging
 # 3rd party imports
 import RPi.GPIO as GPIO
 # module imports
@@ -40,12 +41,22 @@ class MQTTBoard:
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
+        self.logger = logging.getLogger('MQTTBoard')
+        self.logger.setLevel(logging.DEBUG)
+
+        self.ch = logging.StreamHandler()
+        self.ch.setLevel(logging.ERROR)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        self.ch.setFormatter(formatter)
+
         self.mqtt_client = MQTTClient(name, mqtt_host, mqtt_port)
+        self.logger.info("MQTT connecting to {0}:{1}".format(mqtt_host, mqtt_port))
 
         self.mqtt_client.set_on_connect(self.mqtt_on_connect)
         self.mqtt_client.set_on_message(self.mqtt_on_message)
 
         self.mqtt_client.connect()
+        self.logger.info("MQTT connected")
 
         self.base_topic = "homie"
         self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
@@ -61,14 +72,17 @@ class MQTTBoard:
         self.stats_interval = 60
 
         self.topic = "{0}/{1}".format(self.base_topic, self.device_id)
+        self.logger.info("Using topic {0}".format(self.topic))
 
         self.mqtt_publish_device()
         self.mqtt_send_stats()
         self.mqtt_send_nodes()
 
-        Timer(self.stats_interval, self.mqtt_send_stats).start()
+        Timer(self.stats_interval, self.mqtt_send_stats()).start()
+        self.logger.info("Stats Timer started")
 
         self.mqtt_client.start()
+        self.logger.info("Everything started and running.")
 
     def mqtt_publish_device(self):
         self.mqtt_client.publish(self.topic + "/$homie", self.homie)
@@ -84,6 +98,7 @@ class MQTTBoard:
         self.mqtt_client.publish(self.topic + "/$state", "ready")
 
     def mqtt_send_stats(self):
+        self.logger.info("Sending stats")
         stats_topic = "{0}/$stats/".format(self.topic)
 
         uptime = subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0]
@@ -111,6 +126,7 @@ class MQTTBoard:
             i += 1
 
     def mqtt_send_node(self, nr):
+        self.logger.info("Sending node {0}".format(nr))
         light_topic = "{0}/light_{1}/".format(self.topic, nr)
         self.mqtt_client.publish(light_topic + "$name", "Light {0}".format(nr))
         self.mqtt_client.publish(light_topic + "$properties", "power")
@@ -121,10 +137,10 @@ class MQTTBoard:
         self.mqtt_client.publish(light_topic + "power", "false")
 
     def mqtt_on_connect(self, client, userdata, flags, rc):
-        print('Connected with result code: '.format(rc))
+        self.logger.info('Connected with result code: '.format(rc))
 
     def mqtt_on_message(self, client, userdata, msg):
-        print('{0} : {1}'.format(msg.topic, msg.payload))
+        self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
 
 
 def get_ip():
