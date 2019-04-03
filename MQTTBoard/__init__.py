@@ -79,7 +79,7 @@ class MQTTBoard:
         self.mqtt_send_stats()
         self.mqtt_send_nodes()
 
-        Timer(self.stats_interval, self.mqtt_send_stats()).start()
+        Timer(self.stats_interval, self.mqtt_send_stats).start()
         self.logger.info("Stats Timer started")
 
         self.mqtt_client.start()
