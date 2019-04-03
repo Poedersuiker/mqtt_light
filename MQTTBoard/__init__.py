@@ -48,6 +48,7 @@ class MQTTBoard:
         self.ch.setLevel(logging.ERROR)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.ch.setFormatter(formatter)
+        self.logger.addHandler(self.ch)
 
         self.mqtt_client = MQTTClient(name, mqtt_host, mqtt_port)
         self.logger.info("MQTT connecting to {0}:{1}".format(mqtt_host, mqtt_port))
