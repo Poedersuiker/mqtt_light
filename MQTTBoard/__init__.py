@@ -41,6 +41,8 @@ class MQTTBoard:
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
+        self.started = 0
+
         self.logger = logging.getLogger('MQTTBoard')
         self.logger.setLevel(logging.DEBUG)
 
@@ -78,6 +80,8 @@ class MQTTBoard:
         self.mqtt_publish_device()
         self.mqtt_send_stats()
         self.mqtt_send_nodes()
+
+        self.started = 1
 
         Timer(self.stats_interval, self.mqtt_publish_device).start()
         Timer(self.stats_interval, self.mqtt_send_nodes).start()
@@ -138,6 +142,9 @@ class MQTTBoard:
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype ", "boolean")
         self.mqtt_client.publish(light_topic + "power", "false")
+
+        if self.started == 0:
+            self.mqtt_client.subscribe(light_topic + "power")
 
     def mqtt_on_connect(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code: '.format(rc))
