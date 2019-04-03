@@ -46,7 +46,6 @@ class MQTTBoard:
         self.mqtt_client.set_on_message(self.mqtt_on_message)
 
         self.mqtt_client.connect()
-        self.mqtt_client.start()
 
         self.base_topic = "homie"
         self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
@@ -69,6 +68,7 @@ class MQTTBoard:
 
         Timer(self.stats_interval, self.mqtt_send_stats).start()
 
+        self.mqtt_client.start()
 
     def mqtt_publish_device(self):
         self.mqtt_client.publish(self.topic + "/$homie", self.homie)
