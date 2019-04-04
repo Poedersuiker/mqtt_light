@@ -184,7 +184,7 @@ class MQTTBoard:
             self.light_on(nr)
             self.logger.info("Trying to turn on light {0}".format(nr))
         else:
-            self.logger.warning("Problem with message")
+            self.logger.info("Problem with message")
 
     def switch_light(self, nr):
         GPIO.output(self.RELAY[nr], not GPIO.input(self.RELAY[nr]))
