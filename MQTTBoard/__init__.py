@@ -66,13 +66,21 @@ class MQTTBoard:
         # GPIO setup
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.RELAY[1], GPIO.OUT)
+        GPIO.output(self.RELAY[1], False)
         GPIO.setup(self.RELAY[2], GPIO.OUT)
+        GPIO.output(self.RELAY[2], False)
         GPIO.setup(self.RELAY[3], GPIO.OUT)
+        GPIO.output(self.RELAY[3], False)
         GPIO.setup(self.RELAY[4], GPIO.OUT)
+        GPIO.output(self.RELAY[4], False)
         GPIO.setup(self.RELAY[5], GPIO.OUT)
+        GPIO.output(self.RELAY[5], False)
         GPIO.setup(self.RELAY[6], GPIO.OUT)
+        GPIO.output(self.RELAY[6], False)
         GPIO.setup(self.RELAY[7], GPIO.OUT)
+        GPIO.output(self.RELAY[7], False)
         GPIO.setup(self.RELAY[8], GPIO.OUT)
+        GPIO.output(self.RELAY[8], False)
 
         # Publish on MQTT
         self.base_topic = "homie"
@@ -164,6 +172,7 @@ class MQTTBoard:
     def mqtt_on_message(self, client, userdata, msg):
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
         topic = msg.topic.split('/')
+        print(topic)
         nr = topic[2][:1]
         if topic[3] == "power" and msg.payload == "False":
             self.light_off(nr)
