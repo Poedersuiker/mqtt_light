@@ -65,7 +65,14 @@ class MQTTBoard:
 
         # GPIO setup
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.relay, GPIO.OUT)
+        GPIO.setup(self.RELAY[1], GPIO.OUT)
+        GPIO.setup(self.RELAY[2], GPIO.OUT)
+        GPIO.setup(self.RELAY[3], GPIO.OUT)
+        GPIO.setup(self.RELAY[4], GPIO.OUT)
+        GPIO.setup(self.RELAY[5], GPIO.OUT)
+        GPIO.setup(self.RELAY[6], GPIO.OUT)
+        GPIO.setup(self.RELAY[7], GPIO.OUT)
+        GPIO.setup(self.RELAY[8], GPIO.OUT)
 
         # Publish on MQTT
         self.base_topic = "homie"
