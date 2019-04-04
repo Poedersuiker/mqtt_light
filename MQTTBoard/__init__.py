@@ -183,7 +183,7 @@ class MQTTBoard:
         elif topic[3] == "power" and msg.payload.decode('utf-8') == "true":
             self.light_on(nr)
             self.logger.info("Trying to turn on light {0}".format(nr))
-        else
+        else:
             self.logger.warning("Problem with message")
 
     def switch_light(self, nr):
