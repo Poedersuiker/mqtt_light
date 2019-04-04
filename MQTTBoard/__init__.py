@@ -172,8 +172,11 @@ class MQTTBoard:
     def mqtt_on_message(self, client, userdata, msg):
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
         topic = msg.topic.split('/')
-        print(topic)
         nr = topic[2][:1]
+
+        print(topic)
+        print(nr)
+        print(msg.payload.decode('utf-8'))
         if topic[3] == "power" and msg.payload.decode('utf-8') == "false":
             self.light_off(nr)
             self.logger.info("Trying to turn off light {0}".format(nr))
