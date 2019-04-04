@@ -96,12 +96,13 @@ class MQTTBoard:
         self.mqtt_client.publish(self.topic + "/$nodes", self.nodes)
         self.mqtt_client.publish(self.topic + "/$implementation", self.implementation)
         self.mqtt_client.publish(self.topic + "/$stats", self.stats)
-        self.mqtt_client.publish(self.topic + "/$stats/interval", self.stats_interval)
         self.mqtt_client.publish(self.topic + "/$state", "ready")
 
     def mqtt_send_stats(self):
         self.logger.info("Sending stats")
         stats_topic = "{0}/$stats/".format(self.topic)
+
+        self.mqtt_client.publish(stats_topic + "interval", self.stats_interval)
 
         uptime = subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0]
         self.mqtt_client.publish(stats_topic + "uptime", uptime)
