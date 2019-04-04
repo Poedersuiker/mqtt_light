@@ -39,10 +39,12 @@ class MQTTBoard:
 
     """
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
+    SENSOR = [False, 29, 31, 33, 36, 35, 38, 40, 37] # Change to sensor pins
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
         self.started = 0
 
+        # MQTT setup
         self.logger = logging.getLogger('MQTTBoard')
         self.logger.setLevel(logging.DEBUG)
 
@@ -61,6 +63,11 @@ class MQTTBoard:
         self.mqtt_client.connect()
         self.logger.info("MQTT connected")
 
+        # GPIO setup
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(self.relay, GPIO.OUT)
+
+        # Publish on MQTT
         self.base_topic = "homie"
         self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
         self.homie = "3.0.1"
@@ -149,7 +156,31 @@ class MQTTBoard:
 
     def mqtt_on_message(self, client, userdata, msg):
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
+        topic = msg.topic.split('/')
+        nr = topic[2][:1]
+        if topic[3] == "power" and msg.payload == "False":
+            self.light_off(nr)
+            self.logger.info("Trying to turn off light {0}".format(nr))
+        elif topic[3] == "power" and msg.payload == "True":
+            self.light_on(nr)
+            self.logger.info("Trying to turn on light {0}".format(nr))
 
+    def switch_light(self, nr):
+        GPIO.output(self.RELAY[nr], not GPIO.input(self.RELAY[nr]))
+        #self.send_state()
+
+    def light_off(self, nr):
+        # read state and change if light on
+        if self.read_state(nr):
+            self.switch_light(nr)
+
+    def light_on(self, nr):
+        # read state and change if light off
+        if not self.read_state(nr):
+            self.switch_light(nr)
+
+    def read_state(self, nr):
+        return GPIO.input(self.SENSOR[nr])
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
