@@ -83,11 +83,6 @@ class MQTTBoard:
 
         self.started = 1
 
-        Timer(self.stats_interval, self.mqtt_publish_device).start()
-        Timer(self.stats_interval, self.mqtt_send_nodes).start()
-        Timer(self.stats_interval, self.mqtt_send_stats).start()
-        self.logger.info("Stats Timer started")
-
         self.mqtt_client.start()
         self.logger.info("Everything started and running.")
 
@@ -125,6 +120,8 @@ class MQTTBoard:
 
         supply = "Not implemented yet"
         self.mqtt_client.publish(stats_topic + "supply", 0)
+
+        Timer(self.stats_interval, self.mqtt_send_stats).start()
 
     def mqtt_send_nodes(self):
         i = 1
