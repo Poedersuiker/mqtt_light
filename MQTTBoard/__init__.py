@@ -39,7 +39,7 @@ class MQTTBoard:
 
     """
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
-    SENSOR = [False, 29, 31, 33, 36, 35, 38, 40, 37] # Change to sensor pins
+    SENSOR = [False, 29, 31, 33, 36, 35, 38, 40, 37]  # Change to sensor pins
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
         self.started = 0
@@ -84,7 +84,7 @@ class MQTTBoard:
 
         # Publish on MQTT
         self.base_topic = "homie"
-        self.device_id = name.replace(' ', '_') # Use name as device_id. Replacing spaces with underscore
+        self.device_id = name.replace(' ', '_')  # Use name as device_id. Replacing spaces with underscore
         self.homie = "3.0.1"
         self.name = name
         # self.localip = get_ip()
@@ -138,7 +138,9 @@ class MQTTBoard:
         cpuload = subprocess.check_output(['cat', '/proc/loadavg'])
         self.mqtt_client.publish(stats_topic + "cpuload", cpuload)
 
-        freeheap = subprocess.check_output(['cat', '/proc/meminfo']).decode('utf-8').split('\n')[1].replace(' ', '').split(':')[1][:-2]
+        freeheap = \
+        subprocess.check_output(['cat', '/proc/meminfo']).decode('utf-8').split('\n')[1].replace(' ', '').split(':')[1][
+        :-2]
         self.mqtt_client.publish(stats_topic + "freeheap", freeheap)
 
         supply = "Not implemented yet"
@@ -184,11 +186,12 @@ class MQTTBoard:
             self.light_on(nr)
             self.logger.info("Trying to turn on light {0}".format(nr))
         else:
+            print("ELSE")
             self.logger.info("Problem with message")
 
     def switch_light(self, nr):
         GPIO.output(self.RELAY[nr], not GPIO.input(self.RELAY[nr]))
-        #self.send_state()
+        # self.send_state()
 
     def light_off(self, nr):
         # read state and change if light on
@@ -203,6 +206,7 @@ class MQTTBoard:
     def read_state(self, nr):
         return GPIO.input(self.SENSOR[nr])
 
+
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -214,4 +218,3 @@ def get_ip():
     finally:
         s.close()
     return IP
-
