@@ -174,7 +174,7 @@ class MQTTBoard:
     def mqtt_on_message(self, client, userdata, msg):
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
         topic = msg.topic.split('/')
-        nr = topic[2][6:]
+        nr = int(topic[2][6:])
 
         print(topic[3])
         print(nr)
