@@ -179,15 +179,18 @@ class MQTTBoard:
         print(topic[3])
         print(nr)
         print(msg.payload.decode('utf-8'))
-        if topic[3] == "power" and msg.payload.decode('utf-8') == "false":
-            self.light_off(nr)
-            self.logger.info("Trying to turn off light {0}".format(nr))
-        elif topic[3] == "power" and msg.payload.decode('utf-8') == "true":
-            self.light_on(nr)
-            self.logger.info("Trying to turn on light {0}".format(nr))
-        else:
-            print("ELSE")
-            self.logger.info("Problem with message")
+        try:
+            if topic[3] == "power" and msg.payload.decode('utf-8') == "false":
+                self.light_off(nr)
+                self.logger.info("Trying to turn off light {0}".format(nr))
+            elif topic[3] == "power" and msg.payload.decode('utf-8') == "true":
+                self.light_on(nr)
+                self.logger.info("Trying to turn on light {0}".format(nr))
+            else:
+                print("ELSE")
+                self.logger.info("Problem with message")
+        except Exception as e:
+            print("Problem {0}".format(e))
 
     def switch_light(self, nr):
         GPIO.output(self.RELAY[nr], not GPIO.input(self.RELAY[nr]))
