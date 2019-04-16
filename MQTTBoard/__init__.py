@@ -107,6 +107,13 @@ class MQTTBoard:
 
         self.started = 1
 
+        sleep(0.5)
+        i = 1
+        while i <= 8:
+            initial_power_topic = "{0}/light{1}/power".format(self.topic, i)
+            self.mqtt_client.publish(initial_power_topic, "false")
+            i += 1
+
         self.mqtt_client.publish(self.topic + "/$state", "ready")
 
         self.logger.info("Everything started and running.")
@@ -168,7 +175,6 @@ class MQTTBoard:
         self.mqtt_client.publish(light_topic + "power/$retained", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype ", "boolean")
         # self.mqtt_client.publish(light_topic + "power/$format", "true,false")
-        self.mqtt_client.publish(light_topic + "power", "false")
 
         if self.started == 0:
             self.mqtt_client.subscribe(light_topic + "power")
