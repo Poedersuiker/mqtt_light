@@ -126,7 +126,7 @@ class MQTTBoard:
 
         self.mqtt_client.publish(stats_topic + "interval", self.stats_interval)
 
-        uptime = subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0]
+        uptime = int(subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0])
         self.mqtt_client.publish(stats_topic + "uptime", uptime)
 
         signal = "Not implemented yet"
@@ -158,6 +158,7 @@ class MQTTBoard:
         self.logger.info("Sending node {0}".format(nr))
         light_topic = "{0}/light{1}/".format(self.topic, nr)
         self.mqtt_client.publish(light_topic + "$name", "Light {0}".format(nr))
+        self.mqtt_client.publish(light_topic + "$type", "light")
         self.mqtt_client.publish(light_topic + "$properties", "power")
 
         self.mqtt_client.publish(light_topic + "power/$name", "Power")
