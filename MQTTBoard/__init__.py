@@ -156,12 +156,13 @@ class MQTTBoard:
 
     def mqtt_send_node(self, nr):
         self.logger.info("Sending node {0}".format(nr))
-        light_topic = "{0}/light_{1}/".format(self.topic, nr)
+        light_topic = "{0}/light{1}/".format(self.topic, nr)
         self.mqtt_client.publish(light_topic + "$name", "Light {0}".format(nr))
         self.mqtt_client.publish(light_topic + "$properties", "power")
 
         self.mqtt_client.publish(light_topic + "power/$name", "Power")
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
+        self.mqtt_client.publish(light_topic + "power/$retained", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype ", "boolean")
         self.mqtt_client.publish(light_topic + "power", "false")
 
@@ -176,9 +177,6 @@ class MQTTBoard:
         topic = msg.topic.split('/')
         nr = int(topic[2][6:])
 
-        print(topic[3])
-        print(nr)
-        print(msg.payload.decode('utf-8'))
         try:
             if topic[3] == "power" and msg.payload.decode('utf-8') == "false":
                 self.light_off(nr)
@@ -187,10 +185,9 @@ class MQTTBoard:
                 self.light_on(nr)
                 self.logger.info("Trying to turn on light {0}".format(nr))
             else:
-                print("ELSE")
-                self.logger.info("Problem with message")
+                self.logger.error("Problem with message")
         except Exception as e:
-            print("Problem {0}".format(e))
+            self.logger.error("Problem {0}".format(e))
 
     def switch_light(self, nr):
         GPIO.output(self.RELAY[nr], not GPIO.input(self.RELAY[nr]))
