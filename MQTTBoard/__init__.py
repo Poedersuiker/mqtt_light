@@ -185,14 +185,13 @@ class MQTTBoard:
     def mqtt_on_message(self, client, userdata, msg):
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
         topic = msg.topic.split('/')
-        print(topic)
+        # expecting name like 'light2'
         nr = int(topic[2][5:])
-        print(nr)
         try:
-            if topic[3] == "power" and msg.payload.decode('utf-8') == "false":
+            if topic[3] == "power" and topic[4] == "set" and msg.payload.decode('utf-8') == "false":
                 self.light_off(nr)
                 self.logger.info("Trying to turn off light {0}".format(nr))
-            elif topic[3] == "power" and msg.payload.decode('utf-8') == "true":
+            elif topic[3] == "power" and topic[4] == "set" and msg.payload.decode('utf-8') == "true":
                 self.light_on(nr)
                 self.logger.info("Trying to turn on light {0}".format(nr))
             else:
