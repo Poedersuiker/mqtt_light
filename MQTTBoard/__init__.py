@@ -126,7 +126,7 @@ class MQTTBoard:
 
         self.mqtt_client.publish(stats_topic + "interval", self.stats_interval)
 
-        uptime = int(subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0])
+        uptime = int(subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0].split(".")[0])
         self.mqtt_client.publish(stats_topic + "uptime", uptime)
 
         signal = "Not implemented yet"
