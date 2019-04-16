@@ -158,14 +158,14 @@ class MQTTBoard:
         self.logger.info("Sending node {0}".format(nr))
         light_topic = "{0}/light{1}/".format(self.topic, nr)
         self.mqtt_client.publish(light_topic + "$name", "Light{0}".format(nr))
-        self.mqtt_client.publish(light_topic + "$type", "switch")
+        self.mqtt_client.publish(light_topic + "$type", "light")
         self.mqtt_client.publish(light_topic + "$properties", "power")
 
         self.mqtt_client.publish(light_topic + "power/$name", "Power")
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
         self.mqtt_client.publish(light_topic + "power/$retained", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype ", "boolean")
-        self.mqtt_client.publish(light_topic + "power/$format", "true,false")
+        # self.mqtt_client.publish(light_topic + "power/$format", "true,false")
         self.mqtt_client.publish(light_topic + "power", "false")
 
         if self.started == 0:
