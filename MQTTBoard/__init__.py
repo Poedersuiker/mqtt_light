@@ -63,6 +63,8 @@ class MQTTBoard:
         self.mqtt_client.connect()
         self.logger.info("MQTT connected")
 
+        self.mqtt_client.start()
+
         # GPIO setup
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.RELAY[1], GPIO.OUT)
@@ -105,7 +107,8 @@ class MQTTBoard:
 
         self.started = 1
 
-        self.mqtt_client.start()
+        self.mqtt_client.publish(self.topic + "/$state", "ready")
+
         self.logger.info("Everything started and running.")
 
     def mqtt_publish_device(self):
@@ -118,7 +121,6 @@ class MQTTBoard:
         self.mqtt_client.publish(self.topic + "/$nodes", self.nodes)
         self.mqtt_client.publish(self.topic + "/$implementation", self.implementation)
         self.mqtt_client.publish(self.topic + "/$stats", self.stats)
-        self.mqtt_client.publish(self.topic + "/$state", "ready")
 
     def mqtt_send_stats(self):
         self.logger.info("Sending stats")
