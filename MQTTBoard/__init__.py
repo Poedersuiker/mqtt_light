@@ -177,7 +177,7 @@ class MQTTBoard:
         # self.mqtt_client.publish(light_topic + "power/$format", "true,false")
 
         if self.started == 0:
-            self.mqtt_client.subscribe(light_topic + "power")
+            self.mqtt_client.subscribe(light_topic + "power/set")
 
     def mqtt_on_connect(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code: '.format(rc))
