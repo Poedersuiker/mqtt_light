@@ -146,7 +146,7 @@ class MQTTBoard:
         supply = "Not implemented yet"
         self.mqtt_client.publish(stats_topic + "supply", 0)
 
-        Timer(self.stats_interval, self.mqtt_send_stats).start()
+        Timer(self.stats_interval - 1, self.mqtt_send_stats).start()
 
     def mqtt_send_nodes(self):
         i = 1
