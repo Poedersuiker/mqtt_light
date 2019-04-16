@@ -186,7 +186,7 @@ class MQTTBoard:
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
         topic = msg.topic.split('/')
         print(topic)
-        nr = int(topic[2][6:])
+        nr = int(topic[2][5:])
         print(nr)
         try:
             if topic[3] == "power" and msg.payload.decode('utf-8') == "false":
