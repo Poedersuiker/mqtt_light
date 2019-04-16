@@ -174,7 +174,6 @@ class MQTTBoard:
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
         self.mqtt_client.publish(light_topic + "power/$retained", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype", "boolean")
-        # self.mqtt_client.publish(light_topic + "power/$format", "true,false")
 
         if self.started == 0:
             self.mqtt_client.subscribe(light_topic + "power/set")
