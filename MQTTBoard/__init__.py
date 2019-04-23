@@ -144,7 +144,7 @@ class MQTTBoard:
         cputemp = int(subprocess.check_output(['cat', '/sys/class/thermal/thermal_zone0/temp'])) / 1000
         self.mqtt_client.publish(stats_topic + "cputemp", cputemp)
 
-        cpuload = subprocess.check_output(['cat', '/proc/loadavg']).replace('\r', '').replace('\n', '')
+        cpuload = subprocess.check_output(['cat', '/proc/loadavg']).rstrip()
         self.mqtt_client.publish(stats_topic + "cpuload", cpuload)
 
         freeheap = \
