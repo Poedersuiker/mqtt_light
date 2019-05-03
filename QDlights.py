@@ -37,6 +37,7 @@ def my_callback1(channel):
 
 def my_callback2(channel):
     print("falling edge detected on {0}".format(channel))
+    sleep(0.5)
     if pin2_state != GPIO.input(pin2):
         print("State changed for {0}".format(channel))
 
