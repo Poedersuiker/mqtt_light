@@ -162,27 +162,35 @@ while True:
         sleep(0.5)
         if pin1_state != GPIO.input(pin1):
             switch_light(relay1)
+            pin1_state = GPIO.input(pin1)
             logger.info("State changed 1")
         if pin2_state != GPIO.input(pin2):
             switch_light(relay2)
+            pin2_state = GPIO.input(pin2)
             logger.info("State changed 2")
         if pin3_state != GPIO.input(pin3):
             switch_light(relay3)
+            pin3_state = GPIO.input(pin3)
             logger.info("State changed 3")
         if pin4_state != GPIO.input(pin4):
             switch_light(relay4)
+            pin4_state = GPIO.input(pin4)
             logger.info("State changed 4")
         if pin5_state != GPIO.input(pin5):
             switch_light(relay5)
+            pin5_state = GPIO.input(pin5)
             logger.info("State changed 5")
         if pin6_state != GPIO.input(pin6):
             switch_light(relay6)
+            pin6_state = GPIO.input(pin6)
             logger.info("State changed 6")
         if pin7_state != GPIO.input(pin7):
             switch_light(relay7)
+            pin7_state = GPIO.input(pin7)
             logger.info("State changed 7")
         if pin8_state != GPIO.input(pin8):
             switch_light(relay8)
+            pin8_state = GPIO.input(pin8)
             logger.info("State changed 8")
     except KeyboardInterrupt:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
