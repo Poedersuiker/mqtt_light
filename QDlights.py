@@ -38,7 +38,8 @@ relay6 = 38
 relay7 = 40
 relay8 = 37
 
-state_change_time = 0.2
+state_change_time = 0.5
+bounce_time = 1000
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -138,14 +139,14 @@ def my_callback8(channel):
         switch_light(relay8)
 
 
-GPIO.add_event_detect(pin1, GPIO.BOTH, callback=my_callback1, bouncetime=300)
-GPIO.add_event_detect(pin2, GPIO.BOTH, callback=my_callback2, bouncetime=300)
-GPIO.add_event_detect(pin3, GPIO.BOTH, callback=my_callback3, bouncetime=300)
-GPIO.add_event_detect(pin4, GPIO.BOTH, callback=my_callback4, bouncetime=300)
-GPIO.add_event_detect(pin5, GPIO.BOTH, callback=my_callback5, bouncetime=300)
-GPIO.add_event_detect(pin6, GPIO.BOTH, callback=my_callback6, bouncetime=300)
-GPIO.add_event_detect(pin7, GPIO.BOTH, callback=my_callback7, bouncetime=300)
-GPIO.add_event_detect(pin8, GPIO.BOTH, callback=my_callback8, bouncetime=300)
+GPIO.add_event_detect(pin1, GPIO.BOTH, callback=my_callback1, bouncetime=bounce_time)
+GPIO.add_event_detect(pin2, GPIO.BOTH, callback=my_callback2, bouncetime=bounce_time)
+GPIO.add_event_detect(pin3, GPIO.BOTH, callback=my_callback3, bouncetime=bounce_time)
+GPIO.add_event_detect(pin4, GPIO.BOTH, callback=my_callback4, bouncetime=bounce_time)
+GPIO.add_event_detect(pin5, GPIO.BOTH, callback=my_callback5, bouncetime=bounce_time)
+GPIO.add_event_detect(pin6, GPIO.BOTH, callback=my_callback6, bouncetime=bounce_time)
+GPIO.add_event_detect(pin7, GPIO.BOTH, callback=my_callback7, bouncetime=bounce_time)
+GPIO.add_event_detect(pin8, GPIO.BOTH, callback=my_callback8, bouncetime=bounce_time)
 
 while True:
     try:
