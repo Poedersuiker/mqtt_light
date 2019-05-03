@@ -28,15 +28,15 @@ def switch_light(nr):
 def my_callback(channel):
     print("falling edge detected on {0}".format(channel))
 
+
 GPIO.add_event_detect(pin1, GPIO.FALLING, callback=my_callback, bouncetime=300)
+GPIO.add_event_detect(pin2, GPIO.FALLING, callback=my_callback, bouncetime=300)
 
+while True:
+    try:
+        sleep(5)
+        print("5 secs waiting")
+    except KeyboardInterrupt:
+        GPIO.cleanup()  # clean up GPIO on CTRL+C exit
 
-
-try:
-    print("Waiting for rising edge")
-    GPIO.wait_for_edge(pin2, GPIO.RISING)
-    print("Rising edge detected. Here endeth the third lesson.")
-
-except KeyboardInterrupt:
-    GPIO.cleanup()       # clean up GPIO on CTRL+C exit
 GPIO.cleanup()           # clean up GPIO on normal exit
