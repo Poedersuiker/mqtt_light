@@ -75,7 +75,7 @@ def switch_light(nr):
 
 
 def my_callback1(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin1_state != GPIO.input(pin1):
         logger.info("State changed for {0}".format(channel))
@@ -83,7 +83,7 @@ def my_callback1(channel):
 
 
 def my_callback2(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin2_state != GPIO.input(pin2):
         logger.info("State changed for {0}".format(channel))
@@ -91,7 +91,7 @@ def my_callback2(channel):
 
 
 def my_callback3(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin3_state != GPIO.input(pin3):
         logger.info("State changed for {0}".format(channel))
@@ -99,7 +99,7 @@ def my_callback3(channel):
 
 
 def my_callback4(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin4_state != GPIO.input(pin4):
         logger.info("State changed for {0}".format(channel))
@@ -107,7 +107,7 @@ def my_callback4(channel):
 
 
 def my_callback5(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin5_state != GPIO.input(pin5):
         logger.info("State changed for {0}".format(channel))
@@ -115,7 +115,7 @@ def my_callback5(channel):
 
 
 def my_callback6(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin6_state != GPIO.input(pin6):
         logger.info("State changed for {0}".format(channel))
@@ -123,7 +123,7 @@ def my_callback6(channel):
 
 
 def my_callback7(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin7_state != GPIO.input(pin7):
         logger.info("State changed for {0}".format(channel))
@@ -131,7 +131,7 @@ def my_callback7(channel):
 
 
 def my_callback8(channel):
-    logger.info("falling edge detected on {0}".format(channel))
+    logger.info("detected on {0}".format(channel))
     sleep(state_change_time)
     if pin8_state != GPIO.input(pin8):
         logger.info("State changed for {0}".format(channel))
