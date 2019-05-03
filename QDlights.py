@@ -33,9 +33,9 @@ GPIO.add_event_detect(pin1, GPIO.FALLING, callback=my_callback, bouncetime=300)
 
 
 try:
-    print "Waiting for rising edge"
+    print("Waiting for rising edge")
     GPIO.wait_for_edge(pin2, GPIO.RISING)
-    print "Rising edge detected. Here endeth the third lesson."
+    print("Rising edge detected. Here endeth the third lesson.")
 
 except KeyboardInterrupt:
     GPIO.cleanup()       # clean up GPIO on CTRL+C exit
