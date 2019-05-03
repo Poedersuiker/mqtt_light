@@ -33,6 +33,7 @@ def my_callback1(channel):
     print("falling edge detected on {0}".format(channel))
     if pin1_state != GPIO.input(pin1):
         print("State changed for {0}".format(channel))
+        switch_light(relay1)
 
 
 def my_callback2(channel):
@@ -40,6 +41,7 @@ def my_callback2(channel):
     sleep(0.5)
     if pin2_state != GPIO.input(pin2):
         print("State changed for {0}".format(channel))
+        switch_light(relay2)
 
 
 GPIO.add_event_detect(pin1, GPIO.FALLING, callback=my_callback1, bouncetime=300)
