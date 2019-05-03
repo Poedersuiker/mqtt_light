@@ -85,10 +85,11 @@ def my_callback1(channel):
 
 def my_callback2(channel):
     logger.info("detected on {0}".format(channel))
-    sleep(state_change_time)
+    # sleep(state_change_time)
+    switch_light(relay2)
     if pin2_state != GPIO.input(pin2):
         logger.info("State changed for {0}".format(channel))
-        switch_light(relay2)
+
 
 
 def my_callback3(channel):
@@ -150,8 +151,8 @@ GPIO.add_event_detect(pin8, GPIO.BOTH, callback=my_callback8, bouncetime=bounce_
 
 while True:
     try:
-        sleep(5)
-        logger.info("5 secs waiting")
+        sleep(600)
+        logger.info("10 minutes waiting over")
     except KeyboardInterrupt:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
 
