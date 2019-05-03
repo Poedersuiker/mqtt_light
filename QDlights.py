@@ -19,6 +19,9 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+bridge = Bridge('192.168.0.20')
+bridge.connect()
+
 
 pin1 = 3
 pin2 = 5
@@ -73,6 +76,10 @@ pin8_state = GPIO.input(pin8)
 
 def switch_light(nr):
     GPIO.output(nr, not GPIO.input(nr))
+
+
+def switch_hue(nr):
+    bridge.set_light(nr, 'on', not bridge.get_light(nr, 'on'))
 
 
 def my_callback1(channel):
@@ -156,6 +163,8 @@ while True:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
 """
 
+bridge.set_light(3, 'on', False)
+bridge.get_light(3, 'on')
 
 while True:
     try:
@@ -169,7 +178,8 @@ while True:
             pin2_state = GPIO.input(pin2)
             logger.info("State changed 2")
         if pin3_state != GPIO.input(pin3):
-            switch_light(relay3)
+            # switch_light(relay3)
+            switch_hue(3)
             pin3_state = GPIO.input(pin3)
             logger.info("State changed 3")
         if pin4_state != GPIO.input(pin4):
