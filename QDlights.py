@@ -9,8 +9,8 @@ from phue import Bridge
 
 # module imports
 
-pin1 = 22
-pin2 = 27
+pin1 = 13
+pin2 = 15
 relay1 = 29
 relay2 = 31
 
