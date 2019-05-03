@@ -86,10 +86,9 @@ def my_callback1(channel):
 def my_callback2(channel):
     logger.info("detected on {0}".format(channel))
     # sleep(state_change_time)
-    switch_light(relay2)
     if pin2_state != GPIO.input(pin2):
         logger.info("State changed for {0}".format(channel))
-
+        switch_light(relay2)
 
 
 def my_callback3(channel):
@@ -139,7 +138,7 @@ def my_callback8(channel):
         logger.info("State changed for {0}".format(channel))
         switch_light(relay8)
 
-
+"""
 GPIO.add_event_detect(pin1, GPIO.BOTH, callback=my_callback1, bouncetime=bounce_time)
 GPIO.add_event_detect(pin2, GPIO.BOTH, callback=my_callback2, bouncetime=bounce_time)
 GPIO.add_event_detect(pin3, GPIO.BOTH, callback=my_callback3, bouncetime=bounce_time)
@@ -155,5 +154,38 @@ while True:
         logger.info("10 minutes waiting over")
     except KeyboardInterrupt:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
+"""
+
+
+while True:
+    try:
+        sleep(0.5)
+        if pin1_state != GPIO.input(pin1):
+            switch_light(relay1)
+            logger.info("State changed 1")
+        if pin2_state != GPIO.input(pin2):
+            switch_light(relay2)
+            logger.info("State changed 2")
+        if pin3_state != GPIO.input(pin3):
+            switch_light(relay3)
+            logger.info("State changed 3")
+        if pin4_state != GPIO.input(pin4):
+            switch_light(relay4)
+            logger.info("State changed 4")
+        if pin5_state != GPIO.input(pin5):
+            switch_light(relay5)
+            logger.info("State changed 5")
+        if pin6_state != GPIO.input(pin6):
+            switch_light(relay6)
+            logger.info("State changed 6")
+        if pin7_state != GPIO.input(pin7):
+            switch_light(relay7)
+            logger.info("State changed 7")
+        if pin8_state != GPIO.input(pin8):
+            switch_light(relay8)
+            logger.info("State changed 8")
+    except KeyboardInterrupt:
+        GPIO.cleanup()  # clean up GPIO on CTRL+C exit
+
 
 GPIO.cleanup()           # clean up GPIO on normal exit
