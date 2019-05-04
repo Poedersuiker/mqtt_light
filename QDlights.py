@@ -40,6 +40,9 @@ diner_room = 'tradfri_0220_gwa0c9a0677d2f_65540_brightness'
 kitchen = 'tradfri_0220_gwa0c9a0677d2f_65541_brightness'
 cellar = 'tradfri_0220_gwa0c9a0677d2f_65539_brightness'
 upstairs = 'hue_0220_00178866bda2_2_brightness'
+balcony_white = 'hue_0220_00178866bda2_1_brightness'
+bedroom_white = 'tradfri_0220_gwa0c9a0677d2f_65538_brightness'
+
 
 sun_last_update = 0  # Day of the month, if changes re-get the sunrise and sunset
 
@@ -290,6 +293,8 @@ while True:
                 openHAB_set_status(cellar, '0')
                 openHAB_set_status(kitchen, '0')
                 openHAB_set_status(upstairs, '0')
+                openHAB_set_status(balcony_white, '0')
+                openHAB_set_status(bedroom_white, '0')
             else:
                 openHAB_set_status(diner_room, '75')
                 openHAB_set_status(cellar, '75')
