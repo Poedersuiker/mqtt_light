@@ -116,9 +116,9 @@ def openHAB_set_status(light, state):
 def openHAB_switch_light(light):
     status = openHAB_get_status(light)
     if status == 100:
-        state = 0
+        state = "0"
     else:
-        state = 100
+        state = "100"
     openHAB_set_status(light, state)
 
 
@@ -231,9 +231,9 @@ while True:
             logging.info("Living room at {0}%".format(state))
 
             if state > 25:  # constitutes on
-                new_state = 0
+                new_state = "0"
             else:
-                new_state = 75
+                new_state = "75"
 
             openHAB_set_status(living_room, new_state)
             openHAB_set_status(diner_room, new_state)
