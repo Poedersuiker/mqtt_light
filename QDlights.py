@@ -106,7 +106,7 @@ def openHAB_get_status(light):
     response = requests.get("{0}/rest/items/{1}".format(openHAB_address, light))
     content = json.loads(response.content.decode("utf-8"))
     state = content["state"]
-    return state
+    return int(state)
 
 
 def openHAB_set_status(light, state):

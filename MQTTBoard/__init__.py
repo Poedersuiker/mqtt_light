@@ -91,7 +91,7 @@ class MQTTBoard:
         self.name = name
         # self.localip = get_ip()
         # self.mac = get_mac()
-        self.fw_name = "Raspi Relayboard"
+        self.fw_name = "RaspiRelayboard"
         self.fw_version = "0.1"
         self.nodes = "light1,light2,light3,light4,light5,light6,light7,light8"
         self.implementation = "RaspberryPi"
