@@ -1,13 +1,26 @@
+"""
+Quick and Dirty implementation of my home switches.
+
+The Raspberry Pi is connected to a relay board. The rest of the pins are available for input and sensors.
+
+There is an option to connect directly to the Philips Hue Bridge. Or via the REST API from OpenHab. All connections are
+hard-coded because this is a Q&D sollution.
+"""
+
 # Python imports
 from time import sleep
 from threading import Timer
 import logging
+import requests
+import json
 
 # 3rd party imports
 import RPi.GPIO as GPIO
 from phue import Bridge
 
 # module imports
+
+
 
 
 logger = logging.getLogger('QDlight')
@@ -21,6 +34,13 @@ logger.addHandler(ch)
 
 bridge = Bridge('192.168.0.20')
 bridge.connect()
+
+openHAB_address = 'http://192.168.0.10:8080'
+living_room = 'hue_0220_00178866bda2_3_brightness'
+diner_room = 'tradfri_0220_gwa0c9a0677d2f_65540_brightness'
+kitchen = 'tradfri_0220_gwa0c9a0677d2f_65541_brightness'
+cellar = 'tradfri_0220_gwa0c9a0677d2f_65539_brightness'
+upstairs = 'hue_0220_00178866bda2_2_color_temperature'
 
 
 pin1 = 3
@@ -80,6 +100,26 @@ def switch_light(nr):
 
 def switch_hue(nr):
     bridge.set_light(nr, 'on', not bridge.get_light(nr, 'on'))
+
+
+def openHAB_get_status(light):
+    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, light))
+    content = json.loads(response.content.decode("utf-8"))
+    state = content["state"]
+    return state
+
+def openHAB_set_status(light, state):
+    state = "{{'state': {0}}}".format(state)
+    response = requests.put("{0}/rest/items/{1}".format(openHAB_address, light), json=state)
+
+
+def openHAB_switch_light(light):
+    status = openHAB_get_status()
+    if status == 100:
+        state = 0
+    else:
+        state = 100
+    openHAB_set_status(light, state)
 
 
 def my_callback1(channel):
@@ -179,7 +219,9 @@ while True:
             logger.info("State changed 2")
         if pin3_state != GPIO.input(pin3):
             # switch_light(relay3)
-            switch_hue(3)
+            openHAB_switch_light(living_room)
+            openHAB_switch_light(diner_room)
+            openHAB_switch_light(kitchen)
             pin3_state = GPIO.input(pin3)
             logger.info("State changed 3")
         if pin4_state != GPIO.input(pin4):
