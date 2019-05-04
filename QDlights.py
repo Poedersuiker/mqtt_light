@@ -316,6 +316,7 @@ while True:
             sunset, sunrise = openHAB_get_sunrise_and_sunset()
             sunrise_done = 0
             logging.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
+            sun_last_update = datetime.datetime.today().day
 
         if (sunset - datetime.datetime.now()).days == 0:
             if (sunset - datetime.datetime.now()).seconds < (60 * 15):  # 15 min before sunset starts turn the light on (and keep it on)
