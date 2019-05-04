@@ -300,7 +300,9 @@ while True:
             logger.info("State changed 7")
         if pin8_state != GPIO.input(pin8):
             switch_light(relay1)
+            logger.info("Driveway light is {0}".format(GPIO.input(pin4)))
             switch_light(relay8)
+            logger.info("Frontdoor light is {0}".format(GPIO.input(pin5)))
             pin8_state = GPIO.input(pin8)
             logger.info("State changed 8")
 
