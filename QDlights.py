@@ -110,7 +110,7 @@ def openHAB_get_status(light):
 
 
 def openHAB_set_status(light, state):
-    response = requests.put("{0}/rest/items/{1}".format(openHAB_address, light), data=state)
+    response = requests.post("{0}/rest/items/{1}".format(openHAB_address, light), data=state)
 
 
 def openHAB_switch_light(light):
