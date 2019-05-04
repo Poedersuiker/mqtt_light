@@ -108,9 +108,9 @@ def openHAB_get_status(light):
     state = content["state"]
     return state
 
+
 def openHAB_set_status(light, state):
-    state = "{{'state': {0}}}".format(state)
-    response = requests.put("{0}/rest/items/{1}".format(openHAB_address, light), json=state)
+    response = requests.put("{0}/rest/items/{1}".format(openHAB_address, light), data=state)
 
 
 def openHAB_switch_light(light):
@@ -214,14 +214,31 @@ while True:
             pin1_state = GPIO.input(pin1)
             logger.info("State changed 1")
         if pin2_state != GPIO.input(pin2):
+            """
+            Toilet, simple if switched then switch the relay
+            """
             switch_light(relay2)
             pin2_state = GPIO.input(pin2)
             logger.info("State changed 2")
         if pin3_state != GPIO.input(pin3):
+            """
+            Switch all the lights in the 'living space' (Kitchen, diner and living room). 
+            Check if living room is on, if so turn everything off.
+            """
+
             # switch_light(relay3)
-            openHAB_switch_light(living_room)
-            openHAB_switch_light(diner_room)
-            openHAB_switch_light(kitchen)
+            state = openHAB_get_status(living_room)
+            logging.info("Living room at {0}%".format(state))
+
+            if state > 25:  # constitutes on
+                new_state = 0
+            else:
+                new_state = 75
+
+            openHAB_set_status(living_room, new_state)
+            openHAB_set_status(diner_room, new_state)
+            openHAB_set_status(kitchen, new_state)
+
             pin3_state = GPIO.input(pin3)
             logger.info("State changed 3")
         if pin4_state != GPIO.input(pin4):
