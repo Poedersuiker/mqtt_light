@@ -41,7 +41,7 @@ living_room = 'hue_0220_00178866bda2_3_brightness'
 diner_room = 'tradfri_0220_gwa0c9a0677d2f_65540_brightness'
 kitchen = 'tradfri_0220_gwa0c9a0677d2f_65541_brightness'
 cellar = 'tradfri_0220_gwa0c9a0677d2f_65539_brightness'
-upstairs = 'hue_0220_00178866bda2_2_color_temperature'
+upstairs = 'hue_0220_00178866bda2_2_brightness'
 
 sun_last_update = 0  # Day of the month, if changes re-get the sunrise and sunset
 
@@ -98,6 +98,7 @@ pin8_state = GPIO.input(pin8)
 
 def switch_light(nr):
     GPIO.output(nr, not GPIO.input(nr))
+    logging.info("Switching light {0}".format(nr))
 
 
 def switch_hue(nr):
@@ -313,16 +314,20 @@ while True:
         if sun_last_update != datetime.datetime.today().day:
             sunset, sunrise = openHAB_get_sunrise_and_sunset()
             sunrise_done = 0
+            logging.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
 
         if (sunset - datetime.datetime.now()).days == 0:
             if (sunset - datetime.datetime.now()).seconds < (60 * 15):  # 15 min before sunset starts turn the light on (and keep it on)
                 if not GPIO.input(pin4):  # light sensor driveway
                     switch_light(relay1)  # relay driveway
+                    logging.info("Turning Driveway light on for sunset")
                 if not GPIO.input(pin5):  # sensor front door
                     switch_light(relay8)  # relay front door
+                    logging.info("Turning Frontdoor light on for sunset")
 
         if sunrise_done:
             if (sunrise - datetime.datetime.now()).days == -1:
+                logging.info("Turning Frontdoor and Driveway lights off after sunrise")
                 if GPIO.input(pin4):
                     switch_light(relay1)
                 if GPIO.input(pin5):
