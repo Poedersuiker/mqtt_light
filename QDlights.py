@@ -22,8 +22,6 @@ from phue import Bridge
 # module imports
 
 
-
-
 logger = logging.getLogger('QDlight')
 logger.setLevel(logging.DEBUG)
 
@@ -98,7 +96,7 @@ pin8_state = GPIO.input(pin8)
 
 def switch_light(nr):
     GPIO.output(nr, not GPIO.input(nr))
-    logging.info("Switching light {0}".format(nr))
+    logger.info("Switching light {0}".format(nr))
 
 
 def switch_hue(nr):
@@ -243,7 +241,7 @@ while True:
 
             # switch_light(relay3)
             state = openHAB_get_status(living_room)
-            logging.info("Living room at {0}%".format(state))
+            logger.info("Living room at {0}%".format(state))
 
             if state > 25:  # constitutes on
                 new_state = "0"
@@ -284,7 +282,7 @@ while True:
             """
 
             state = openHAB_get_status(upstairs)
-            logging.info("Living room at {0}%".format(state))
+            logger.info("Living room at {0}%".format(state))
 
             if state > 25:
                 openHAB_set_status(living_room, '0')
@@ -310,26 +308,25 @@ while True:
         """
         Manual switch the lights during daytime. After Sunset and before Sunrise + 15min switch does nothing
         """
-        print(sun_last_update)
-        print(datetime.datetime.today().day)
+
         if sun_last_update != datetime.datetime.today().day:
             sunset, sunrise = openHAB_get_sunrise_and_sunset()
             sunrise_done = 0
-            logging.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
+            logger.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
             sun_last_update = datetime.datetime.today().day
 
         if (sunset - datetime.datetime.now()).days == 0:
             if (sunset - datetime.datetime.now()).seconds < (60 * 15):  # 15 min before sunset starts turn the light on (and keep it on)
                 if not GPIO.input(pin4):  # light sensor driveway
                     switch_light(relay1)  # relay driveway
-                    logging.info("Turning Driveway light on for sunset")
+                    logger.info("Turning Driveway light on for sunset")
                 if not GPIO.input(pin5):  # sensor front door
                     switch_light(relay8)  # relay front door
-                    logging.info("Turning Frontdoor light on for sunset")
+                    logger.info("Turning Frontdoor light on for sunset")
 
         if sunrise_done:
             if (sunrise - datetime.datetime.now()).days == -1:
-                logging.info("Turning Frontdoor and Driveway lights off after sunrise")
+                logger.info("Turning Frontdoor and Driveway lights off after sunrise")
                 if GPIO.input(pin4):
                     switch_light(relay1)
                 if GPIO.input(pin5):
