@@ -12,6 +12,7 @@ from time import sleep
 from threading import Timer
 import logging
 import requests
+import datetime
 import json
 
 # 3rd party imports
@@ -42,6 +43,7 @@ kitchen = 'tradfri_0220_gwa0c9a0677d2f_65541_brightness'
 cellar = 'tradfri_0220_gwa0c9a0677d2f_65539_brightness'
 upstairs = 'hue_0220_00178866bda2_2_color_temperature'
 
+sun_last_update = 0  # Day of the month, if changes re-get the sunrise and sunset
 
 pin1 = 3
 pin2 = 5
@@ -120,6 +122,18 @@ def openHAB_switch_light(light):
     else:
         state = "100"
     openHAB_set_status(light, state)
+
+
+def openHAB_get_sunrise_and_sunset():
+    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Set_StartTime"))
+    content = json.loads(response.content.decode('utf-8'))
+    sunset = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
+
+    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Rise_EndTime"))
+    content = json.loads(response.content.decode('utf-8'))
+    sunrise = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
+
+    return sunset, sunrise
 
 
 def my_callback1(channel):
@@ -210,7 +224,7 @@ while True:
     try:
         sleep(0.5)
         if pin1_state != GPIO.input(pin1):
-            switch_light(relay1)
+            # switch_light(relay1)  ## relay1 is connected to pin8 and timer
             pin1_state = GPIO.input(pin1)
             logger.info("State changed 1")
         if pin2_state != GPIO.input(pin2):
@@ -241,6 +255,10 @@ while True:
 
             pin3_state = GPIO.input(pin3)
             logger.info("State changed 3")
+
+        """
+        pin4 and pin5 are used as light sensors for the outside lights
+        
         if pin4_state != GPIO.input(pin4):
             switch_light(relay4)
             pin4_state = GPIO.input(pin4)
@@ -249,18 +267,68 @@ while True:
             switch_light(relay5)
             pin5_state = GPIO.input(pin5)
             logger.info("State changed 5")
+        """
+
         if pin6_state != GPIO.input(pin6):
             switch_light(relay6)
             pin6_state = GPIO.input(pin6)
             logger.info("State changed 6")
         if pin7_state != GPIO.input(pin7):
-            switch_light(relay7)
+            """
+            Front door switch (closest to living room)
+            If first floor light is off:
+                Turn on the diner room light, cellar and first floor light
+            If first floor light is on: 
+                Turn off all the lights in the house
+            """
+
+            state = openHAB_get_status(upstairs)
+            logging.info("Living room at {0}%".format(state))
+
+            if state > 25:
+                openHAB_set_status(living_room, '0')
+                openHAB_set_status(diner_room, '0')
+                openHAB_set_status(cellar, '0')
+                openHAB_set_status(kitchen, '0')
+                openHAB_set_status(upstairs, '0')
+            else:
+                openHAB_set_status(diner_room, '75')
+                openHAB_set_status(cellar, '75')
+                openHAB_set_status(upstairs, '75')
+
+            # switch_light(relay7)
             pin7_state = GPIO.input(pin7)
             logger.info("State changed 7")
         if pin8_state != GPIO.input(pin8):
+            switch_light(relay1)
             switch_light(relay8)
             pin8_state = GPIO.input(pin8)
             logger.info("State changed 8")
+
+
+        """
+        Manual switch the lights during daytime. After Sunset - 30min and before Sunrise + 30min switch does nothing
+        """
+
+        if sun_last_update != datetime.datetime.today().day:
+            sunset, sunrise = openHAB_get_sunrise_and_sunset()
+            sunrise_done = 0
+
+        if (sunset - datetime.datetime.now()).days == 0:
+            if (sunset - datetime.datetime.now()).seconds < (60 * 15):  # 15 min before sunset starts turn the light on (and keep it on)
+                if not GPIO.input(pin4):  # light sensor driveway
+                    switch_light(relay1)  # relay driveway
+                if not GPIO.input(pin5):  # sensor front door
+                    switch_light(relay8)  # relay front door
+
+        if sunrise_done:
+            if (sunrise - datetime.datetime.now()).days == -1:
+                if GPIO.input(pin4):
+                    switch_light(relay1)
+                if GPIO.input(pin5):
+                    switch_light(relay8)
+                sunrise_done = 1
+
     except KeyboardInterrupt:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
 
