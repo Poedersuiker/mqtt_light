@@ -114,7 +114,7 @@ def openHAB_set_status(light, state):
 
 
 def openHAB_switch_light(light):
-    status = openHAB_get_status()
+    status = openHAB_get_status(light)
     if status == 100:
         state = 0
     else:
