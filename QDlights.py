@@ -127,13 +127,25 @@ def openHAB_switch_light(light):
 
 
 def openHAB_get_sunrise_and_sunset():
+    """
+    Input from REST API
+    yyyy-MM-dd'T'HH:mm:ss.SSSZ    2017-07-01T14:59:55.711+0000
+
+    Removing timezone, and hoping REST and Python use the same Timezone!
+
+    :return:
+    sunset and sunrise in Python datetime object
+    """
+
     response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Set_StartTime"))
     content = json.loads(response.content.decode('utf-8'))
     sunset = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
+    sunset = sunset - datetime.timedelta(minutes=15)
 
     response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Rise_EndTime"))
     content = json.loads(response.content.decode('utf-8'))
     sunrise = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
+    sunrise = sunrise + datetime.timedelta(minutes=15)
 
     return sunset, sunrise
 
@@ -322,17 +334,17 @@ while True:
             logger.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
             sun_last_update = datetime.datetime.today().day
 
-        if (sunset - datetime.datetime.now()).days == 0:
-            if (sunset - datetime.datetime.now()).seconds < (60 * 15):  # 15 min before sunset starts turn the light on (and keep it on)
-                if not GPIO.input(pin4):  # light sensor driveway
-                    switch_light(relay1)  # relay driveway
-                    logger.info("Turning Driveway light on for sunset")
-                if not GPIO.input(pin5):  # sensor front door
-                    switch_light(relay8)  # relay front door
-                    logger.info("Turning Frontdoor light on for sunset")
+        if datetime.datetime.now() > sunset:
+            if not GPIO.input(pin4):  # light sensor driveway
+                switch_light(relay1)  # relay driveway
+                logger.info("Turning Driveway light on for sunset")
+            if not GPIO.input(pin5):  # sensor front door
+                switch_light(relay8)  # relay front door
+                logger.info("Turning Frontdoor light on for sunset")
 
-        if sunrise_done:
-            if (sunrise - datetime.datetime.now()).days == -1:
+        if not sunrise_done:
+            if sunrise < datetime.datetime.now() < sunset:  # Sunset in this comparison to make sure the update has  
+                # changed to the next day.
                 logger.info("Turning Frontdoor and Driveway lights off after sunrise")
                 if GPIO.input(pin4):
                     switch_light(relay1)
