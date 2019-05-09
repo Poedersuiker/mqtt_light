@@ -344,8 +344,8 @@ while True:
                 logger.info("Turning Frontdoor light on for sunset")
 
         if not sunrise_done:
-            logger.info("Sunrise trigger")
             if sunrise < datetime.datetime.now() < sunset:  # Sunset in this comparison to make sure the update has
+                logger.info("Sunrise trigger")
                 # changed to the next day.
                 logger.info("Turning Frontdoor and Driveway lights off after sunrise")
                 if GPIO.input(pin4):
