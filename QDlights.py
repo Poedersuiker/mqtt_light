@@ -336,10 +336,10 @@ while True:
 
         if datetime.datetime.now() > sunset:
             logger.info("Sunset trigger")
-            if not GPIO.input(pin4):  # light sensor driveway
+            if GPIO.input(pin4):  # light sensor driveway
                 switch_light(relay1)  # relay driveway
                 logger.info("Turning Driveway light on for sunset")
-            if not GPIO.input(pin5):  # sensor front door
+            if GPIO.input(pin5):  # sensor front door
                 switch_light(relay8)  # relay front door
                 logger.info("Turning Frontdoor light on for sunset")
 
