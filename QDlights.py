@@ -335,12 +335,12 @@ while True:
             sun_last_update = datetime.datetime.today().day
 
         if datetime.datetime.now() > sunset:
-            logger.info("Sunset trigger")
-            logger.info("Driveway : {0}".format(GPIO.input(pin4)))
-            if GPIO.input(pin4):  # light sensor driveway
+            if GPIO.input(pin4) or GPIO.input(pin5):
+                logger.info("Sunset trigger")
+                logger.info("Driveway : {0}".format(GPIO.input(pin4)))
                 switch_light(relay1)  # relay driveway
                 logger.info("Turning Driveway light on for sunset")
-            if GPIO.input(pin5):  # sensor front door
+                logger.info("Driveway : {0}".format(GPIO.input(pin4)))
                 switch_light(relay8)  # relay front door
                 logger.info("Turning Frontdoor light on for sunset")
 
