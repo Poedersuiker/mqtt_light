@@ -349,9 +349,9 @@ while True:
                 logger.info("Sunrise trigger")
                 # changed to the next day.
                 logger.info("Turning Frontdoor and Driveway lights off after sunrise")
-                if GPIO.input(pin4):
+                if not GPIO.input(pin4):
                     switch_light(relay1)
-                if GPIO.input(pin5):
+                if not GPIO.input(pin5):
                     switch_light(relay8)
                 sunrise_done = 1
 
