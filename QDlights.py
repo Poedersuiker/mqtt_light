@@ -330,7 +330,7 @@ while True:
 
         if sun_last_update != datetime.datetime.today().day:
             sunset, sunrise = openHAB_get_sunrise_and_sunset()
-            sunrise_done = 0
+            sunrise_done = False
             logger.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
             sun_last_update = datetime.datetime.today().day
 
@@ -353,7 +353,7 @@ while True:
                     switch_light(relay1)
                 if not GPIO.input(pin5):
                     switch_light(relay8)
-                sunrise_done = 1
+                sunrise_done = True
 
     except KeyboardInterrupt:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
