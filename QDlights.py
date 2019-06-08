@@ -334,8 +334,8 @@ while True:
             logger.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
             sun_last_update = datetime.datetime.today().day
 
-        logger.debug("Sunset: {0} {1} {2}".format(sunset, datetime.datetime.now() > sunset))
-        logger.debug("Sunrise: {0} {1} {2}".format(sunrise, datetime.datetime.now() > sunrise))
+        logger.debug("Sunset: {0} {1}".format(sunset, datetime.datetime.now() > sunset))
+        logger.debug("Sunrise: {0} {1}".format(sunrise, datetime.datetime.now() > sunrise))
 
         if datetime.datetime.now() > sunset:
             if GPIO.input(pin4) or GPIO.input(pin5):
