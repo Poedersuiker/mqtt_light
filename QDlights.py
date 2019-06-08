@@ -26,7 +26,7 @@ logger = logging.getLogger('QDlight')
 logger.setLevel(logging.DEBUG)
 
 ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
+ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
@@ -334,6 +334,9 @@ while True:
             logger.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
             sun_last_update = datetime.datetime.today().day
 
+        logger.debug("Sunset: {0} {1} {2}".format(sunset, sunrise, datetime.datetime.now() > sunset))
+        logger.debug("Sunrise: {0} {1} {2}".format(sunset, sunrise, datetime.datetime.now() > sunrise))
+
         if datetime.datetime.now() > sunset:
             if GPIO.input(pin4) or GPIO.input(pin5):
                 logger.info("Sunset trigger")
@@ -346,7 +349,7 @@ while True:
 
         if not sunrise_done:
             logger.debug("Sunrise not done")
-            if sunrise < datetime.datetime.now():  # Sunset in this comparison to make sure the update has
+            if datetime.datetime.now() > sunrise:  # Sunset in this comparison to make sure the update has
                 # changed to the next day.
                 logger.info("Sunrise trigger")
                 logger.info("Turning Frontdoor and Driveway lights off after sunrise")
