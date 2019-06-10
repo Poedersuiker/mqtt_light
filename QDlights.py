@@ -26,7 +26,7 @@ logger = logging.getLogger('QDlight')
 logger.setLevel(logging.DEBUG)
 
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
@@ -45,6 +45,8 @@ bedroom_white = 'tradfri_0220_gwa0c9a0677d2f_65538_brightness'
 
 
 sun_last_update = 0  # Day of the month, if changes re-get the sunrise and sunset
+sunrise_done = False
+sunset_done = False
 
 pin1 = 3
 pin2 = 5
@@ -331,21 +333,24 @@ while True:
         if sun_last_update != datetime.datetime.today().day:
             sunset, sunrise = openHAB_get_sunrise_and_sunset()
             sunrise_done = False
+            sunset_done = False
             logger.info("Sunrise and Sunset refreshed ({0}, {1})".format(sunrise, sunset))
             sun_last_update = datetime.datetime.today().day
 
         logger.debug("Sunset: {0} {1}".format(sunset, datetime.datetime.now() > sunset))
         logger.debug("Sunrise: {0} {1}".format(sunrise, datetime.datetime.now() > sunrise))
 
-        if datetime.datetime.now() > sunset:
-            if GPIO.input(pin4) or GPIO.input(pin5):
-                logger.info("Sunset trigger")
-                logger.info("Driveway : {0}".format(GPIO.input(pin4)))
-                switch_light(relay1)  # relay driveway
-                logger.info("Turning Driveway light on for sunset")
-                logger.info("Driveway : {0}".format(GPIO.input(pin4)))
-                switch_light(relay8)  # relay front door
-                logger.info("Turning Frontdoor light on for sunset")
+        if not sunset_done:
+            if datetime.datetime.now() > sunset:
+                if GPIO.input(pin4) or GPIO.input(pin5):
+                    logger.info("Sunset trigger")
+                    logger.info("Driveway : {0}".format(GPIO.input(pin4)))
+                    switch_light(relay1)  # relay driveway
+                    logger.info("Turning Driveway light on for sunset")
+                    logger.info("Driveway : {0}".format(GPIO.input(pin4)))
+                    switch_light(relay8)  # relay front door
+                    logger.info("Turning Frontdoor light on for sunset")
+                sunset_done = True
 
         if not sunrise_done:
             logger.debug("Sunrise not done")
