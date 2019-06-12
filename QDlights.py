@@ -47,6 +47,7 @@ bedroom_white = 'tradfri_0220_gwa0c9a0677d2f_65538_brightness'
 sun_last_update = 0  # Day of the month, if changes re-get the sunrise and sunset
 sunrise_done = False
 sunset_done = False
+last_hour = 0
 
 pin1 = 3
 pin2 = 5
@@ -339,6 +340,11 @@ while True:
 
         logger.debug("Sunset: {0} {1}".format(sunset, datetime.datetime.now() > sunset))
         logger.debug("Sunrise: {0} {1}".format(sunrise, datetime.datetime.now() > sunrise))
+
+        if last_hour != datetime.datetime.now().hour:
+            logger.info( "Current time: {0}".format(datetime.datetime.now()))
+            logger.debug("Sunset:       {0}    {1}".format(sunset, datetime.datetime.now() > sunset))
+            logger.debug("Sunrise:      {0}    {1}".format(sunrise, datetime.datetime.now() > sunrise))
 
         if not sunset_done:
             if datetime.datetime.now() > sunset:
