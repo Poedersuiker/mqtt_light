@@ -342,9 +342,13 @@ while True:
         logger.debug("Sunrise: {0} {1}".format(sunrise, datetime.datetime.now() > sunrise))
 
         if last_hour != datetime.datetime.now().hour:
+            logger.info("----------------------------------------------------------------------------")
             logger.info("Current time: {0}".format(datetime.datetime.now()))
             logger.info("Sunset:       {0}    {1}".format(sunset, datetime.datetime.now() > sunset))
             logger.info("Sunrise:      {0}    {1}".format(sunrise, datetime.datetime.now() > sunrise))
+            logger.info("Sunset done:  {0}".format(sunset_done))
+            logger.info("Sunrise done: {0}".format(sunrise_done))
+            logger.info("----------------------------------------------------------------------------")
             last_hour = datetime.datetime.now().hour
 
         if not sunset_done:
