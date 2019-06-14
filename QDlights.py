@@ -142,15 +142,15 @@ def openHAB_get_sunrise_and_sunset():
 
     response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Set_StartTime"))
     content = json.loads(response.content.decode('utf-8'))
-    sunset = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
-    sunset = sunset - datetime.timedelta(minutes=15)
+    return_sunset = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
+    # sunset = sunset - datetime.timedelta(minutes=15)
 
     response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Rise_EndTime"))
     content = json.loads(response.content.decode('utf-8'))
-    sunrise = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
-    sunrise = sunrise + datetime.timedelta(minutes=15)
+    return_sunrise = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
+    # sunrise = sunrise + datetime.timedelta(minutes=15)
 
-    return sunset, sunrise
+    return return_sunset, return_sunrise
 
 
 def my_callback1(channel):
@@ -345,8 +345,8 @@ while True:
             logger.info("----------------------------------------------------------------------------")
             logger.info("Current time: {0}".format(datetime.datetime.now()))
             logger.info("Sunset:       {0}    {1}".format(sunset, datetime.datetime.now() > sunset))
-            logger.info("Sunrise:      {0}    {1}".format(sunrise, datetime.datetime.now() > sunrise))
             logger.info("Sunset done:  {0}".format(sunset_done))
+            logger.info("Sunrise:      {0}    {1}".format(sunrise, datetime.datetime.now() > sunrise))
             logger.info("Sunrise done: {0}".format(sunrise_done))
             logger.info("----------------------------------------------------------------------------")
             last_hour = datetime.datetime.now().hour
