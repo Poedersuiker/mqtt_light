@@ -23,11 +23,16 @@ from phue import Bridge
 
 
 logger = logging.getLogger('QDlight')
-logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
+file_handler = logging.RotatingFileHandler('QDlight.log', mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
