@@ -223,6 +223,16 @@ def my_callback8(channel):
         logger.info("State changed for {0}".format(channel))
         switch_light(relay8)
 
+
+def sun_status():
+    logger.info("----------------------------------------------------------------------------")
+    logger.info("Current time: {0}".format(datetime.datetime.now()))
+    logger.info("Sunset:       {0}    {1}".format(sunset, datetime.datetime.now() > sunset))
+    logger.info("Sunset done:  {0}".format(sunset_done))
+    logger.info("Sunrise:      {0}    {1}".format(sunrise, datetime.datetime.now() > sunrise))
+    logger.info("Sunrise done: {0}".format(sunrise_done))
+    logger.info("----------------------------------------------------------------------------")
+
 """
 GPIO.add_event_detect(pin1, GPIO.BOTH, callback=my_callback1, bouncetime=bounce_time)
 GPIO.add_event_detect(pin2, GPIO.BOTH, callback=my_callback2, bouncetime=bounce_time)
@@ -349,13 +359,7 @@ while True:
         logger.debug("Sunrise: {0} {1}".format(sunrise, datetime.datetime.now() > sunrise))
 
         if last_hour != datetime.datetime.now().hour:
-            logger.info("----------------------------------------------------------------------------")
-            logger.info("Current time: {0}".format(datetime.datetime.now()))
-            logger.info("Sunset:       {0}    {1}".format(sunset, datetime.datetime.now() > sunset))
-            logger.info("Sunset done:  {0}".format(sunset_done))
-            logger.info("Sunrise:      {0}    {1}".format(sunrise, datetime.datetime.now() > sunrise))
-            logger.info("Sunrise done: {0}".format(sunrise_done))
-            logger.info("----------------------------------------------------------------------------")
+            sun_status()
             last_hour = datetime.datetime.now().hour
 
         if not sunset_done:
@@ -369,6 +373,7 @@ while True:
                     switch_light(relay8)  # relay front door
                     logger.info("Turning Frontdoor light on for sunset")
                 sunset_done = True
+                sun_status()
 
         if not sunrise_done:
             logger.debug("Sunrise not done")
@@ -381,7 +386,11 @@ while True:
                 if not GPIO.input(pin5):
                     switch_light(relay8)
                 sunrise_done = True
+                sun_status()
 
+    except Exception as e:
+        logger.warning("Encountered an Exception!!!!!")
+        logger.warning("Error: {0}".format(e))
     except KeyboardInterrupt:
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
 
