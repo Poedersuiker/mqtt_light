@@ -26,7 +26,7 @@ logger = logging.getLogger('QDlight')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-file_handler = logging.RotatingFileHandler('QDlight.log', mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
+file_handler = logging.handlers.RotatingFileHandler('QDlight.log', mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
