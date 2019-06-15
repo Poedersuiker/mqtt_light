@@ -11,6 +11,7 @@ hard-coded because this is a Q&D sollution.
 from time import sleep
 from threading import Timer
 import logging
+from logging.handlers import RotatingFileHandler
 import requests
 import datetime
 import json
@@ -26,7 +27,7 @@ logger = logging.getLogger('QDlight')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-file_handler = logging.handlers.RotatingFileHandler('QDlight.log', mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
+file_handler = RotatingFileHandler('QDlight.log', mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
