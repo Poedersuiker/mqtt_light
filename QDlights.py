@@ -24,6 +24,7 @@ from phue import Bridge
 
 
 logger = logging.getLogger('QDlight')
+logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
