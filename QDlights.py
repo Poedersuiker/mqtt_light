@@ -254,6 +254,8 @@ while True:
 bridge.set_light(3, 'on', False)
 bridge.get_light(3, 'on')
 
+sunset, sunrise = openHAB_get_sunrise_and_sunset()
+
 while True:
     try:
         sleep(0.5)
