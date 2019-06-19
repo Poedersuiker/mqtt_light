@@ -393,6 +393,7 @@ while True:
         logger.warning("Encountered an Exception!!!!!")
         logger.warning("Error: {0}".format(e))
     except KeyboardInterrupt:
+        GPIO.setmode(GPIO.BOARD)
         GPIO.cleanup()  # clean up GPIO on CTRL+C exit
 
 
