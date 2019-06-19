@@ -348,7 +348,8 @@ while True:
         Manual switch the lights during daytime. After Sunset and before Sunrise + 15min switch does nothing
         """
 
-        if sun_last_update != datetime.datetime.today().day:
+        # if sun_last_update != datetime.datetime.today().day:
+        if last_hour == 2 and sun_last_update != datetime.datetime.today().day:
             sunset, sunrise = openHAB_get_sunrise_and_sunset()
             sunrise_done = False
             sunset_done = False
