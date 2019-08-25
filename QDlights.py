@@ -143,16 +143,18 @@ def openHAB_get_sunrise_and_sunset():
 
     Removing timezone, and hoping REST and Python use the same Timezone!
 
+ GRANT ALL on OpenHAB_persistence.* TO 'openhab_persistence'@'locahost' IDENTIFIED BY 'openhab_klink34';
+
     :return:
     sunset and sunrise in Python datetime object
     """
 
-    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Set_StartTime"))
+    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "astro_sun_local_set_start"))
     content = json.loads(response.content.decode('utf-8'))
     return_sunset = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
     # sunset = sunset - datetime.timedelta(minutes=15)
 
-    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "LocalSun_Rise_EndTime"))
+    response = requests.get("{0}/rest/items/{1}".format(openHAB_address, "astro_sun_local_rise_end"))
     content = json.loads(response.content.decode('utf-8'))
     return_sunrise = datetime.datetime.strptime(content['state'], "%Y-%m-%dT%H:%M:%S.%f%z").replace(tzinfo=None)
     # sunrise = sunrise + datetime.timedelta(minutes=15)
