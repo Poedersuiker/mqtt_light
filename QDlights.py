@@ -42,12 +42,12 @@ bridge = Bridge('192.168.0.20')
 bridge.connect()
 
 openHAB_address = 'http://192.168.0.10:8080'
-living_room = 'hue_0220_00178866bda2_3_brightness'
+living_room = 'LivingRoom_Brightness'
 diner_room = 'DiningRoom_Brightness'
 kitchen = 'Kitchen_Brightness'
 cellar = 'Cellar_Brightness'
-upstairs = 'hue_0220_00178866bda2_2_brightness'
-balcony_white = 'hue_0220_00178866bda2_1_brightness'
+upstairs = 'GangBoven_Brightness'
+balcony_white = 'BalconyWhite_Brightness'
 bedroom_white = 'tradfri_0220_gwa0c9a0677d2f_65538_brightness'
 
 
