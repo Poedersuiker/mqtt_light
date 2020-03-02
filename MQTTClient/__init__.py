@@ -25,10 +25,11 @@ class MQTTClient(threading.Thread):
     def publish(self, topic, msg):
         self.mqtt_client.publish(topic, msg, retain=True)
 
-
     def run(self):
         self.mqtt_client.loop_forever()
 
+    def disconnect(self):
+        self.mqtt_client.disconnect()
 
 def on_connect(client, userdata, flags, rc):
     print('Connected with result code: '.format(rc))

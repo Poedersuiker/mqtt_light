@@ -7,6 +7,7 @@ from uuid import getnode as get_mac
 import subprocess
 import logging
 from uptime import uptime
+import signal
 # 3rd party imports
 import RPi.GPIO as GPIO
 # module imports
@@ -40,10 +41,12 @@ class MQTTBoard:
 
     """
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
-    SENSOR = [False, 29, 31, 33, 36, 35, 38, 40, 37]  # Change to sensor pins
+    SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
+    SENSOR_STATE = [False, False, False, False, False, False, False, False, False]
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
         self.started = 0
+        self.stopped = 0
 
         # MQTT setup
         self.logger = logging.getLogger('MQTTBoard')
@@ -85,6 +88,16 @@ class MQTTBoard:
         GPIO.setup(self.RELAY[8], GPIO.OUT)
         GPIO.output(self.RELAY[8], False)
 
+        GPIO.setup(self.SENSOR[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[3], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[4], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[5], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[6], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[7], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.SENSOR[8], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+
         # Publish on MQTT
         self.base_topic = "homie"
         self.device_id = name.replace(' ', '_')  # Use name as device_id. Replacing spaces with underscore
@@ -94,7 +107,7 @@ class MQTTBoard:
         # self.mac = get_mac()
         self.fw_name = "RaspiRelayboard"
         self.fw_version = "0.1"
-        self.nodes = "light1,light2,light3,light4,light5,light6,light7,light8"
+        self.nodes = "light1,light2,light3,light4,light5,light6,light7,light8,switch1,switch2,switch3,switch4,switch5,switch6,switch7,switch8"
         self.implementation = "RaspberryPi"
         self.stats = "uptime,signal,cputemp,cpuload,freeheap,supply"
         self.stats_interval = 60
@@ -116,6 +129,8 @@ class MQTTBoard:
             i += 1
 
         self.mqtt_client.publish(self.topic + "/$state", "ready")
+
+        signal.signal(signal.SIGINT, self.handle_signal)
 
         self.logger.info("Everything started and running.")
 
@@ -153,16 +168,18 @@ class MQTTBoard:
         supply = "Not implemented yet"
         self.mqtt_client.publish(stats_topic + "supply", 0)
 
-        Timer(self.stats_interval - 1, self.mqtt_send_stats).start()
+        if not self.stopped:  # if not stopped stay alive
+            Timer(self.stats_interval - 1, self.mqtt_send_stats).start()
 
     def mqtt_send_nodes(self):
         i = 1
         while i <= 8:
-            self.mqtt_send_node(i)
+            self.mqtt_send_light_node(i)
+            self.mqtt_send_switch_node(i)
             i += 1
 
-    def mqtt_send_node(self, nr):
-        self.logger.info("Sending node {0}".format(nr))
+    def mqtt_send_light_node(self, nr):
+        self.logger.info("Sending light node {0}".format(nr))
         light_topic = "{0}/light{1}/".format(self.topic, nr)
         self.mqtt_client.publish(light_topic + "$name", "Light{0}".format(nr))
         self.mqtt_client.publish(light_topic + "$type", "light")
@@ -175,6 +192,21 @@ class MQTTBoard:
 
         if self.started == 0:
             self.mqtt_client.subscribe(light_topic + "power/set")
+
+    def mqtt_send_switch_node(self, nr):
+        self.logger.info("Sending switch node {0}".format(nr))
+        light_topic = "{0}/switch{1}/".format(self.topic, nr)
+        self.mqtt_client.publish(light_topic + "$name", "Switch{0}".format(nr))
+        self.mqtt_client.publish(light_topic + "$type", "switch")
+        self.mqtt_client.publish(light_topic + "$properties", "switch")
+
+        self.mqtt_client.publish(light_topic + "switch/$name", "Swtich {0}".format(nr))
+        self.mqtt_client.publish(light_topic + "switch/$settable", "false")
+        self.mqtt_client.publish(light_topic + "switch/$retained", "true")
+        self.mqtt_client.publish(light_topic + "switch/$datatype", "boolean")
+
+        if self.started == 0:
+            self.mqtt_client.subscribe(light_topic + "switch/set")
 
     def mqtt_on_connect(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code: '.format(rc))
@@ -212,6 +244,20 @@ class MQTTBoard:
 
     def read_state(self, nr):
         return GPIO.input(self.SENSOR[nr])
+
+    def handle_signal(self, signal, frame):
+        print("Program signal: {0}, {1}".format(signal, frame))
+        if signal == 2:  # KeyboardInterupt - Stop everything
+            self.stop()
+
+    def stop(self):
+        self.stopped = 1
+        print("Waiting 5 seconds to close all threads")
+        sleep(5)
+        self.mqtt_client.publish(self.topic + "/$state", "disconnected")
+        self.mqtt_client.disconnect()
+        self.started = 0
+
 
 
 def get_ip():
