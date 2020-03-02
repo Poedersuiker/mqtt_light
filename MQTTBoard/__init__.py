@@ -132,6 +132,7 @@ class MQTTBoard:
         self.mqtt_client.publish(self.topic + "/$state", "ready")
 
         signal.signal(signal.SIGINT, self.handle_signal)
+        self.read_switches()
 
         self.logger.info("Everything started and running.")
 
