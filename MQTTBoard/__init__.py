@@ -202,7 +202,7 @@ class MQTTBoard:
         self.mqtt_client.publish(switch_topic + "$type", "switch")
         self.mqtt_client.publish(switch_topic + "$properties", "switch")
 
-        self.mqtt_client.publish(switch_topic + "switch/$name", "Swtich {0}".format(nr))
+        self.mqtt_client.publish(switch_topic + "switch/$name", "Switch {0}".format(nr))
         self.mqtt_client.publish(switch_topic + "switch/$settable", "false")
         self.mqtt_client.publish(switch_topic + "switch/$retained", "true")
         self.mqtt_client.publish(switch_topic + "switch/$datatype", "boolean")
@@ -258,7 +258,7 @@ class MQTTBoard:
             if self.SENSOR_STATE[i] != self.read_switch(i):
                 self.SENSOR_STATE[i] = self.read_switch(i)
                 switch_topic = "{0}/switch{1}/".format(self.topic, i)
-                self.mqtt_client.publish(switch_topic + "switch/set", self.SENSOR_STATE[i])
+                self.mqtt_client.publish(switch_topic + "switch", self.SENSOR_STATE[i])
                 self.logger.info("Switch{0} changed to {1}".format(i,self.SENSOR_STATE[i]))
             i += 1
         if not self.stopped:
@@ -266,9 +266,9 @@ class MQTTBoard:
 
     def read_switch(self, nr):
         if self.read_state(nr):
-            return "on"
+            return "true"
         else:
-            return "off"
+            return "false"
 
     def stop(self):
         self.stopped = 1
