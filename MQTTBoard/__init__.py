@@ -6,6 +6,7 @@ import socket
 from uuid import getnode as get_mac
 import subprocess
 import logging
+from uptime import uptime
 # 3rd party imports
 import RPi.GPIO as GPIO
 # module imports
@@ -135,8 +136,7 @@ class MQTTBoard:
 
         self.mqtt_client.publish(stats_topic + "interval", self.stats_interval)
 
-        uptime = int(subprocess.check_output(['cat', '/proc/uptime']).decode('utf-8').split()[0].split(".")[0])
-        self.mqtt_client.publish(stats_topic + "uptime", uptime)
+        self.mqtt_client.publish(stats_topic + "uptime", uptime())
 
         signal = "Not implemented yet"
         self.mqtt_client.publish(stats_topic + "signal", 0)
@@ -147,9 +147,7 @@ class MQTTBoard:
         cpuload = subprocess.check_output(['cat', '/proc/loadavg']).rstrip()
         self.mqtt_client.publish(stats_topic + "cpuload", cpuload)
 
-        freeheap = \
-        subprocess.check_output(['cat', '/proc/meminfo']).decode('utf-8').split('\n')[1].replace(' ', '').split(':')[1][
-        :-2]
+        freeheap = subprocess.check_output(['cat', '/proc/meminfo']).decode('utf-8').split('\n')[1].replace(' ', '').split(':')[1][:-2]
         self.mqtt_client.publish(stats_topic + "freeheap", freeheap)
 
         supply = "Not implemented yet"
