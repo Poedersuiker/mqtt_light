@@ -43,7 +43,7 @@ class MQTTBoard:
     """
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
     SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
-    SENSOR_STATE = [False, False, False, False, False, False, False, False, False]
+    SENSOR_STATE = [False, None, None, None, None, None, None, None, None]
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
         self.started = 0
