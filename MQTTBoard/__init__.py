@@ -253,6 +253,7 @@ class MQTTBoard:
             self.stop()
 
     def read_switches(self):
+        self.logger.info("Reading Switches")
         i = 1
         while i <= 8:
             if self.SENSOR_STATE[i] != self.read_state(i):
