@@ -186,7 +186,7 @@ class MQTTBoard:
         self.mqtt_client.publish(light_topic + "$type", "light")
         self.mqtt_client.publish(light_topic + "$properties", "power")
 
-        self.mqtt_client.publish(light_topic + "power/$name", "Power")
+        self.mqtt_client.publish(light_topic + "power/$name", "Power light{0}".format(nr))
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
         self.mqtt_client.publish(light_topic + "power/$retained", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype", "boolean")
@@ -196,18 +196,18 @@ class MQTTBoard:
 
     def mqtt_send_switch_node(self, nr):
         self.logger.info("Sending switch node {0}".format(nr))
-        light_topic = "{0}/switch{1}/".format(self.topic, nr)
-        self.mqtt_client.publish(light_topic + "$name", "Switch{0}".format(nr))
-        self.mqtt_client.publish(light_topic + "$type", "switch")
-        self.mqtt_client.publish(light_topic + "$properties", "switch")
+        switch_topic = "{0}/switch{1}/".format(self.topic, nr)
+        self.mqtt_client.publish(switch_topic + "$name", "Switch{0}".format(nr))
+        self.mqtt_client.publish(switch_topic + "$type", "switch")
+        self.mqtt_client.publish(switch_topic + "$properties", "switch")
 
-        self.mqtt_client.publish(light_topic + "switch/$name", "Swtich {0}".format(nr))
-        self.mqtt_client.publish(light_topic + "switch/$settable", "false")
-        self.mqtt_client.publish(light_topic + "switch/$retained", "true")
-        self.mqtt_client.publish(light_topic + "switch/$datatype", "boolean")
+        self.mqtt_client.publish(switch_topic + "switch/$name", "Swtich {0}".format(nr))
+        self.mqtt_client.publish(switch_topic + "switch/$settable", "false")
+        self.mqtt_client.publish(switch_topic + "switch/$retained", "true")
+        self.mqtt_client.publish(switch_topic + "switch/$datatype", "boolean")
 
         if self.started == 0:
-            self.mqtt_client.subscribe(light_topic + "switch/set")
+            self.mqtt_client.subscribe(switch_topic + "switch/set")
 
     def mqtt_on_connect(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code: '.format(rc))
@@ -250,6 +250,17 @@ class MQTTBoard:
         print("Program signal: {0}, {1}".format(signal, frame))
         if signal == 2:  # KeyboardInterupt - Stop everything
             self.stop()
+
+    def read_switches(self):
+        i = 1
+        while i <= 8:
+            if self.SENSOR_STATE[i] != self.read_state(i):
+                self.SENSOR_STATE[i] = self.read_state(i)
+                switch_topic = "{0}/switch{1}/".format(self.topic, i)
+                self.mqtt_client.publish(switch_topic + "switch/set", self.SENSOR_STATE[i])
+                self.logger.info("Switch{0} changed to {1}".format(i,self.SENSOR_STATE[i]))
+        if not self.stopped:
+            Timer(0.5, self.read_switches).start()
 
     def stop(self):
         self.stopped = 1
