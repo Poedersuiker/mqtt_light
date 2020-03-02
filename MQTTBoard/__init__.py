@@ -267,7 +267,7 @@ class MQTTBoard:
     def read_switch(self, nr):
         if self.read_state(nr):
             return "on"
-        else
+        else:
             return "off"
 
     def stop(self):
