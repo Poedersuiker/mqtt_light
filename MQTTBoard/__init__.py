@@ -8,6 +8,7 @@ import subprocess
 import logging
 from uptime import uptime
 import signal
+import sys
 # 3rd party imports
 import RPi.GPIO as GPIO
 # module imports
@@ -257,7 +258,7 @@ class MQTTBoard:
         self.mqtt_client.publish(self.topic + "/$state", "disconnected")
         self.mqtt_client.disconnect()
         self.started = 0
-
+        sys.exit()
 
 
 def get_ip():
