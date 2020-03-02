@@ -253,7 +253,6 @@ class MQTTBoard:
             self.stop()
 
     def read_switches(self):
-        self.logger.info("Reading Switches")
         i = 1
         while i <= 8:
             if self.SENSOR_STATE[i] != self.read_state(i):
@@ -261,6 +260,7 @@ class MQTTBoard:
                 switch_topic = "{0}/switch{1}/".format(self.topic, i)
                 self.mqtt_client.publish(switch_topic + "switch/set", self.SENSOR_STATE[i])
                 self.logger.info("Switch{0} changed to {1}".format(i,self.SENSOR_STATE[i]))
+            i += 1
         if not self.stopped:
             Timer(0.5, self.read_switches).start()
 
