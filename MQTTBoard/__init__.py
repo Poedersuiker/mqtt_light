@@ -233,13 +233,15 @@ class MQTTBoard:
 
     def light_off(self, nr):
         # read state and change if light on
-        if self.read_state(nr):
-            self.switch_light(nr)
+        # if self.read_state(nr):
+        #    self.switch_light(nr)
+        GPIO.output(self.RELAY[nr], True)
 
     def light_on(self, nr):
         # read state and change if light off
-        if not self.read_state(nr):
-            self.switch_light(nr)
+        # if not self.read_state(nr):
+        #    self.switch_light(nr)
+        GPIO.output(self.RELAY[nr], False)
 
     def read_state(self, nr):
         return GPIO.input(self.SENSOR[nr])
