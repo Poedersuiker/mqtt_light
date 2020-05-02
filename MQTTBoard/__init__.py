@@ -225,7 +225,8 @@ class MQTTBoard:
         self.logger.info('{0} : {1}'.format(msg.topic, msg.payload))
         topic = msg.topic.split('/')
         # expecting name like 'light2'
-        nr = int(topic[2][5:])
+        nr = self.RELAY_NAME.index(topic[2])
+        # nr = int(topic[2][5:])
         try:
             if topic[3] == "power" and topic[4] == "set" and msg.payload.decode('utf-8') == "false":
                 self.light_off(nr)
