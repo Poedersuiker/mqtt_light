@@ -44,7 +44,7 @@ class MQTTBoard:
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
     RELAY_NAME = [False, 'DrivewayLight', 'ToiletLight', 'light3', 'light4', 'light5', 'light6', 'light7', 'FrontDoorLight']
     SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
-    SENSOR_NAME = [False, 'sensor1', 'sensor2', 'sensor3', 'sensor4', 'sensor5', 'sensor6', 'sensor7', 'sensor8']
+    SENSOR_NAME = [False, 'sensor1', 'SchakelaarTussendeur1', 'SchakelaarTussendeur2', 'sensor4', 'sensor5', 'sensor6', 'SchakelaarVoordeur2', 'SchakelaarVoordeur1']
     SENSOR_STATE = [False, None, None, None, None, None, None, None, None]
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
