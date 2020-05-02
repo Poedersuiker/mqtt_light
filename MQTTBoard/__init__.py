@@ -42,7 +42,9 @@ class MQTTBoard:
 
     """
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
+    RELAY_NAME = [False, 'Driveway', 'Toilet', 'light3', 'light4', 'light5', 'light6', 'light7', 'FrontDoor']
     SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
+    SENSOR_NAME = [False, 'sensor1', 'sensor2', 'sensor3', 'sensor4', 'sensor5', 'sensor6', 'sensor7', 'sensor8']
     SENSOR_STATE = [False, None, None, None, None, None, None, None, None]
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
@@ -108,7 +110,15 @@ class MQTTBoard:
         # self.mac = get_mac()
         self.fw_name = "RaspiRelayboard"
         self.fw_version = "0.1"
-        self.nodes = "light1,light2,light3,light4,light5,light6,light7,light8,switch1,switch2,switch3,switch4,switch5,switch6,switch7,switch8"
+        self.nodes = ""
+        for i in range(1, 9):
+            if i > 1:
+                self.nodes += ","
+            self.nodes += self.RELAY_NAME[i]
+
+        for i in range(1, 9):
+            self.nodes += self.SENSOR_NAME[i]
+
         self.implementation = "RaspberryPi"
         self.stats = "uptime,signal,cputemp,cpuload,freeheap,supply"
         self.stats_interval = 60
