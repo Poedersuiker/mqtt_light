@@ -135,7 +135,7 @@ class MQTTBoard:
         sleep(0.5)
         i = 1
         while i <= 8:
-            initial_power_topic = "{0}/light{1}/power".format(self.topic, i)
+            initial_power_topic = "{0}/{1}/power".format(self.topic, self.RELAY_NAME[i])
             self.mqtt_client.publish(initial_power_topic, "false")
             i += 1
 
@@ -192,12 +192,12 @@ class MQTTBoard:
 
     def mqtt_send_light_node(self, nr):
         self.logger.info("Sending light node {0}".format(nr))
-        light_topic = "{0}/light{1}/".format(self.topic, nr)
-        self.mqtt_client.publish(light_topic + "$name", "Light{0}".format(nr))
+        light_topic = "{0}/{1}/".format(self.topic, self.RELAY_NAME[nr])
+        self.mqtt_client.publish(light_topic + "$name", "{0}".format(self.RELAY_NAME[nr]))
         self.mqtt_client.publish(light_topic + "$type", "light")
         self.mqtt_client.publish(light_topic + "$properties", "power")
 
-        self.mqtt_client.publish(light_topic + "power/$name", "Power light{0}".format(nr))
+        self.mqtt_client.publish(light_topic + "power/$name", "{0}".format(self.RELAY_NAME[nr]))
         self.mqtt_client.publish(light_topic + "power/$settable", "true")
         self.mqtt_client.publish(light_topic + "power/$retained", "true")
         self.mqtt_client.publish(light_topic + "power/$datatype", "boolean")
@@ -207,12 +207,12 @@ class MQTTBoard:
 
     def mqtt_send_switch_node(self, nr):
         self.logger.info("Sending switch node {0}".format(nr))
-        switch_topic = "{0}/switch{1}/".format(self.topic, nr)
-        self.mqtt_client.publish(switch_topic + "$name", "Switch{0}".format(nr))
+        switch_topic = "{0}/{1}/".format(self.topic, self.SENSOR_NAME[nr])
+        self.mqtt_client.publish(switch_topic + "$name", "{0}".format(self.SENSOR_NAME[nr]))
         self.mqtt_client.publish(switch_topic + "$type", "switch")
         self.mqtt_client.publish(switch_topic + "$properties", "switch")
 
-        self.mqtt_client.publish(switch_topic + "switch/$name", "Switch {0}".format(nr))
+        self.mqtt_client.publish(switch_topic + "switch/$name", "{0}".format(self.SENSOR_NAME[nr]))
         self.mqtt_client.publish(switch_topic + "switch/$settable", "false")
         self.mqtt_client.publish(switch_topic + "switch/$retained", "true")
         self.mqtt_client.publish(switch_topic + "switch/$datatype", "boolean")
@@ -266,9 +266,9 @@ class MQTTBoard:
         while i <= 8:
             if self.SENSOR_STATE[i] != self.read_switch(i):
                 self.SENSOR_STATE[i] = self.read_switch(i)
-                switch_topic = "{0}/switch{1}/".format(self.topic, i)
+                switch_topic = "{0}/{1}/".format(self.topic, self.SENSOR_NAME[i])
                 self.mqtt_client.publish(switch_topic + "switch", self.SENSOR_STATE[i])
-                self.logger.info("Switch{0} changed to {1}".format(i, self.SENSOR_STATE[i]))
+                self.logger.info("{0} changed to {1}".format(self.SENSOR_NAME[i], self.SENSOR_STATE[i]))
             i += 1
         if not self.stopped:
             Timer(0.5, self.read_switches).start()
