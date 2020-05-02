@@ -42,7 +42,7 @@ class MQTTBoard:
 
     """
     RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
-    RELAY_NAME = [False, 'Driveway', 'Toilet', 'light3', 'light4', 'light5', 'light6', 'light7', 'FrontDoor']
+    RELAY_NAME = [False, 'DrivewayLight', 'ToiletLight', 'light3', 'light4', 'light5', 'light6', 'light7', 'FrontDoorLight']
     SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
     SENSOR_NAME = [False, 'sensor1', 'sensor2', 'sensor3', 'sensor4', 'sensor5', 'sensor6', 'sensor7', 'sensor8']
     SENSOR_STATE = [False, None, None, None, None, None, None, None, None]
