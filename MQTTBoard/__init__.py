@@ -117,6 +117,7 @@ class MQTTBoard:
             self.nodes += self.RELAY_NAME[i]
 
         for i in range(1, 9):
+            self.nodes += ","
             self.nodes += self.SENSOR_NAME[i]
 
         self.implementation = "RaspberryPi"
