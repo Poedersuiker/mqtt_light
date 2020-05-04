@@ -58,6 +58,8 @@ class MQTTBoard:
         SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
         SENSOR_NAME = [False, 'sensor1', 'sensor2', 'sensor3', 'sensor4', 'sensor5', 'sensor6', 'sensor7', 'sensor8']
         SENSOR_STATE = [False, None, None, None, None, None, None, None, None]
+    else:
+        print("Hostname not found")
 
     def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
         self.started = 0
