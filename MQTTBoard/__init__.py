@@ -6,11 +6,13 @@ import socket
 from uuid import getnode as get_mac
 import subprocess
 import logging
-from uptime import uptime
 import signal
 import sys
+
 # 3rd party imports
+from uptime import uptime
 import RPi.GPIO as GPIO
+
 # module imports
 from MQTTClient import MQTTClient
 
