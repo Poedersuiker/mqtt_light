@@ -74,6 +74,7 @@ class MQTTBoard:
 
         # self.ch = logging.StreamHandler()
         self.ch = logging.FileHandler('/var/log/LightsControl/lc.log')
+
         self.ch.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.ch.setFormatter(formatter)
