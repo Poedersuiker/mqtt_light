@@ -78,7 +78,7 @@ class MQTTBoard:
         self.ch.setFormatter(formatter)
         self.logger.addHandler(self.ch)
 
-        self.mqtt_client = MQTTClient(name, mqtt_host, mqtt_port)
+        self.mqtt_client = MQTTClient(self.name, mqtt_host, mqtt_port)
         self.logger.info("MQTT connecting to {0}:{1}".format(mqtt_host, mqtt_port))
 
         self.mqtt_client.set_on_connect(self.mqtt_on_connect)
@@ -120,9 +120,8 @@ class MQTTBoard:
 
         # Publish on MQTT
         self.base_topic = "homie"
-        self.device_id = name.replace(' ', '_')  # Use name as device_id. Replacing spaces with underscore
+        self.device_id = self.name.replace(' ', '_')  # Use name as device_id. Replacing spaces with underscore
         self.homie = "3.0.1"
-        self.name = name
         # self.localip = get_ip()
         # self.mac = get_mac()
         self.fw_name = "RaspiRelayboard"
