@@ -63,9 +63,10 @@ class MQTTBoard:
     else:
         print("Hostname not found")
 
-    def __init__(self, name, mqtt_host='localhost', mqtt_port=1883):
+    def __init__(self, mqtt_host='localhost', mqtt_port=1883):
         self.started = 0
         self.stopped = 0
+        self.name = str(socket.gethostname())
 
         # MQTT setup
         self.logger = logging.getLogger('MQTTBoard')

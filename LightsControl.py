@@ -5,6 +5,6 @@ from time import sleep
 # module imports
 from MQTTBoard import MQTTBoard
 
-board = MQTTBoard('GroundFloorControl', '192.168.0.10')
+board = MQTTBoard('192.168.0.10')
 
 
