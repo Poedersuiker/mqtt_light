@@ -72,9 +72,11 @@ class MQTTBoard:
         self.logger = logging.getLogger('MQTTBoard')
         self.logger.setLevel(logging.DEBUG)
 
-        self.ch = logging.StreamHandler()
+        # self.ch = logging.StreamHandler()
+        self.ch = logging.FileHandler('/var/log/LightsControl/lc.log')
+
         self.ch.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.ch.setFormatter(formatter)
         self.logger.addHandler(self.ch)
 
@@ -175,7 +177,7 @@ class MQTTBoard:
         self.mqtt_client.publish(self.topic + "/$stats", self.stats)
 
     def mqtt_send_stats(self):
-        # self.logger.info("Sending stats")
+        self.logger.info("Sending stats")
         stats_topic = "{0}/$stats/".format(self.topic)
 
         self.mqtt_client.publish(stats_topic + "interval", self.stats_interval)
