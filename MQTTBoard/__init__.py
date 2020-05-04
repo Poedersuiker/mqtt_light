@@ -42,15 +42,17 @@ class MQTTBoard:
 
     """
 
-    hostname = socket.gethostname()
-
+    hostname = str(socket.gethostname())
+    print(hostname)
     if hostname == 'LightsGroundFloor':
+        print("Using {0} for configuration".format(hostname))
         RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
         RELAY_NAME = [False, 'DrivewayLight', 'ToiletLight', 'light3', 'light4', 'light5', 'light6', 'light7', 'FrontDoorLight']
         SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
         SENSOR_NAME = [False, 'sensor1', 'SchakelaarTussendeur1', 'SchakelaarTussendeur2', 'sensor4', 'sensor5', 'sensor6', 'SchakelaarVoordeur2', 'SchakelaarVoordeur1']
         SENSOR_STATE = [False, None, None, None, None, None, None, None, None]
     elif hostname == 'LightsFirstFloor':
+        print("Using {0} for configuration".format(hostname))
         RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
         RELAY_NAME = [False, 'UtilitiesRoom', 'ClosetMasterBedroom', 'light3', 'light4', 'light5', 'light6', 'light7', 'light8']
         SENSOR = [False, 3, 5, 7, 11, 13, 15, 19, 21]  # Change to sensor pins
