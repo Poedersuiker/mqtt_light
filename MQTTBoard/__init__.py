@@ -46,7 +46,7 @@ class MQTTBoard:
 
     hostname = str(socket.gethostname())
     print(hostname)
-    if hostname == 'LightsGroundfloor':
+    if hostname == 'LightsGroundFloor':
         print("Using {0} for configuration".format(hostname))
         RELAY = [False, 29, 31, 33, 36, 35, 38, 40, 37]
         RELAY_NAME = [False, 'DrivewayLight', 'ToiletLight', 'light3', 'light4', 'light5', 'light6', 'light7', 'FrontDoorLight']
